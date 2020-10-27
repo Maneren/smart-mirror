@@ -3,18 +3,21 @@ import './App.css';
 
 import Grid from './components/Grid.js';
 
+import { Time } from './modules';
+
 class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      modules: [null, null, null, null, null, null]
+      availableWidgets: [Time],
+      editMode: false
     };
   }
 
   render () {
     return (
       <div className='App'>
-        <Grid modules={this.state.modules} />
+        <Grid availableWidgets={this.state.availableWidgets} />
 
       </div>);
   }
