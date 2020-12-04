@@ -1,0 +1,30 @@
+.weather-container header {
+  text-align: right;
+}
+
+.weather-container .weathericon,
+.weather-container .fa-home {
+  font-size: 75%;
+  line-height: 65px;
+  display: inline-block;
+  transform: translate(0, -3px);
+}
+
+.weather-container .humidity-icon {
+  padding-right: 4px;
+}
+
+.weather-container .humidity-padding {
+  padding-bottom: 6px;
+}
+
+@font-face {
+  font-family: "Free Sans";
+  src: url("./assets/font/FreeSans.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.weather-container div .degree {
+  font-family: "Free Sans";
+}

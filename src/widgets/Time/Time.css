@@ -1,0 +1,16 @@
+.time-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+}
+
+.date {
+  font-size: 30px;
+}
+
+.time sup {
+  top: -0.47em;
+  font-size: 60%;
+  margin-left: 2px;
+}

@@ -1,0 +1,38 @@
+.forecast-container .day {
+  padding-left: 0;
+  padding-right: 25px;
+}
+
+.forecast-container .weather-icon {
+  padding-right: 30px;
+  text-align: center;
+}
+
+.forecast-container .min-temp {
+  padding-left: 20px;
+  padding-right: 0;
+}
+
+.forecast-container .rain {
+  padding-left: 20px;
+  padding-right: 0;
+}
+
+.forecast-container tr.colored .min-temp {
+  color: #bcddff;
+}
+
+.forecast-container tr.colored .max-temp {
+  color: #ff8e99;
+}
+
+@font-face {
+  font-family: "Free Sans";
+  src: url("./assets/font/FreeSans.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.forecast-container .degree {
+  font-family: "Free Sans";
+}
