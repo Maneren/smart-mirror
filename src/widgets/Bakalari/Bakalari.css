@@ -1,0 +1,11 @@
+.bakalari-container td {
+  border: solid 1px white;
+}
+
+.bakalari-container .weekday {
+  min-width: 80px;
+}
+
+.bakalari-container .lesson {
+  min-width: 50px;
+}
