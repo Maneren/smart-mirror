@@ -5,11 +5,11 @@
   /* justify-content: center; */
 }
 
-.date {
+.time-container .date {
   font-size: 30px;
 }
 
-.time sup {
+.time-container .time sup {
   top: -0.47em;
   font-size: 60%;
   margin-left: 2px;

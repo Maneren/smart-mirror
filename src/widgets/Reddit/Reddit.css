@@ -1,0 +1,5 @@
+.reddit-container img {
+  height: 500px;
+  width: auto;
+  filter: grayscale(100%);
+}
