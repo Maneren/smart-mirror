@@ -76,7 +76,7 @@ class Bakalari extends WidgetTemplate {
               case 'Canceled':
                 return {
                   changed,
-                  blankLesson: true,
+                  blank: true,
                   index,
                   changeType: change.ChangeType,
                   changeDescription: change.Description
@@ -112,7 +112,7 @@ class Bakalari extends WidgetTemplate {
       for (let j = 0; j < lessons.length; j++) {
         const lesson = lessons[j];
         if (lesson.index !== j + 1) {
-          lessons.splice(j, 0, {});
+          lessons.splice(j, 0, { blank: true });
           break;
         }
       }
@@ -152,6 +152,14 @@ class Bakalari extends WidgetTemplate {
     if (this.missingCredentials) return (<div className='bakalari-container'>Missing credentials</div>);
     if (!this.state.loaded) return <div className='bakalari-container'><Loader color='#eee' /></div>;
 
+    const getLessonJSX = (lesson, i) => {
+      if (!lesson.blank) {
+        return (<td key={i} className={`lesson ${lesson.changed ? 'changed' : ''}`}>{lesson.subject}<br />{lesson.room}</td>);
+      }
+      if (lesson.changed) return <td key={i} className='lesson changed blank' />;
+      else return (<td key={i} className='lesson blank' />);
+    };
+
     const timetable = this.state.timetable;
     return (
       <div className='bakalari-container'>
@@ -168,14 +176,7 @@ class Bakalari extends WidgetTemplate {
                 return (
                   <tr key={i} className='day'>
                     <td className='weekday'>{day.weekday}</td>
-                    {day.lessons.map(
-                      (lesson, i) =>
-                        lesson
-                          ? (!lesson.blankLesson
-                            ? (<td key={i} className={`lesson ${lesson.changed ? 'changed' : ''}`}>{lesson.subject}</td>)
-                            : <td key={i} className={`lesson ${lesson.changed ? 'changed' : ''}`} />
-                          ) : (<td key={i} className='lesson' />)
-                    )}
+                    {day.lessons.map((lesson, i) => getLessonJSX(lesson, i))}
                   </tr>
                 );
               }
