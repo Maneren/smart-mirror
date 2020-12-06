@@ -154,7 +154,10 @@ class Bakalari extends WidgetTemplate {
 
     const getLessonJSX = (lesson, i) => {
       if (!lesson.blank) {
-        return (<td key={i} className={`lesson ${lesson.changed ? 'changed' : ''}`}>{lesson.subject}<br />{lesson.room}</td>);
+        return (<td key={i} className={`lesson ${lesson.changed ? 'changed' : ''}`}>
+          <span className='subject'>{lesson.subject}</span>
+          <span className='room'>{lesson.room}</span>
+          </td>);
       }
       if (lesson.changed) return <td key={i} className='lesson changed blank' />;
       else return (<td key={i} className='lesson blank' />);
