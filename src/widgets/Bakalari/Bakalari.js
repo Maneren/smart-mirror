@@ -157,7 +157,7 @@ class Bakalari extends WidgetTemplate {
       <div className='bakalari-container'>
         <table className='timetable'>
           <thead>
-            <tr>
+            <tr className='hours'>
               <th key={0} />
               {new Array(timetable.maxDayLength).fill(0).map((x, i) => <th key={i}>{i + 1}</th>)}
             </tr>
