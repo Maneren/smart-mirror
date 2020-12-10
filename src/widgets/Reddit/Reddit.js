@@ -18,7 +18,8 @@ class Reddit extends WidgetTemplate {
     };
     this.state = {
       config: props.config,
-      posts: []
+      posts: [],
+      activePostIndex: 1
     };
   }
 
@@ -43,7 +44,11 @@ class Reddit extends WidgetTemplate {
     sleep(Math.random() * 2000 + 500).then(() => {
       const data = this.processData(json);
       console.log(data);
-      this.setState({ posts: data, loaded: true });
+      this.setState({
+        posts: data,
+        loaded: true,
+        activePost: data[this.state.activePostIndex]
+      });
     });
   }
 
@@ -111,16 +116,10 @@ class Reddit extends WidgetTemplate {
 
   render () {
     if (!this.state.loaded) return <div className='reddit-container'><Loader color='#eee' /></div>;
-
+    const activePost = this.state.activePost;
     return (
       <div className='reddit-container'>
-        <img src={this.state.posts[1].image.src} className='img' alt='post img' />
-        {/* <img
-          src='' onError={e => {
-            this.fetchImgWithCustomHeader(this.state.posts[0].image.src).then(url => { this.src = url; });
-          }}
-        /> */}
-        {/* {this.state.posts[0].image.loaded} */}
+        <img src={activePost.image.src} className='img' alt='post img' />
       </div>
     );
   }
