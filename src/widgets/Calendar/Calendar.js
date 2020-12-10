@@ -402,7 +402,7 @@ class Calendar extends WidgetTemplate {
   }
 
   static addEllipsisIfNeeded (string, maxLength = 10) {
-    if (string.length >= maxLength) return string.splice(maxLength - 3 - 1, 0) + '...';
+    if (string.length >= maxLength) return string.split().splice(maxLength - 3 - 1, 0).join('') + '...';
     else return string;
   }
 
