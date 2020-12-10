@@ -5,7 +5,7 @@ import './App.css';
 import Grid from './components/Grid';
 import Loader from './components/Loader';
 
-import content from './widgets';
+import widgetsDB from './widgets';
 
 import data from './config/config.json';
 
@@ -13,7 +13,7 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      availableWidgets: content,
+      availableWidgets: widgetsDB,
       editMode: false
     };
   }
@@ -21,11 +21,18 @@ class App extends Component {
   componentDidMount () {
     this.loadConfig().then(
       data => {
-        const widgets = data.map(x => content[x.type] ? content[x.type] : (x.type === '' ? content.Null : content.Error));
+        const widgets = data.map(
+          widget => {
+            const type = widget.type;
+            if (widget.hide || type === '') return widgetsDB.Null;
+            else if (widgetsDB[type] !== undefined) return widgetsDB[type];
+            else return widgetsDB.Error;
+          }
+        );
 
-        const configs = data.map(x => x.config === undefined ? {} : x.config);
+        const configs = data.map(widget => widget.config === undefined ? {} : widget.config);
 
-        console.log(widgets, configs);
+        // console.log(widgets, configs);
         this.setState({ widgets, configs });
       }
     );
@@ -43,7 +50,7 @@ class App extends Component {
     // });
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
     await sleep(Math.random() * 1000 + 500);
-    console.log(data);
+    // console.log(data);
     return data;
   }
 
