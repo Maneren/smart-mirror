@@ -42,12 +42,11 @@ class Calendar extends WidgetTemplate {
   componentDidMount () {
     super.componentDidMount();
     this.initialize();
-    this.internalClock = setInterval(this.updateState.bind(this), 120000);
   }
 
   initialize () {
     this.updateState();
-    this.internalClock = setInterval(this.updateState.bind(this), 120000);
+    this.internalClock = setInterval(this.updateState.bind(this), 180000);
   }
 
   processData (data) {
@@ -341,8 +340,8 @@ class Calendar extends WidgetTemplate {
 
     const parsed = ical.parseICS(data);
     console.log(parsed);
-    // const now = Date.now();
-    const now = new Date(Date.UTC(2020, 8, 15));
+    const now = new Date(Date.now());
+    // const now = new Date(Date.UTC(2020, 8, 15));
     let events = Object.entries(parsed).map(([key, event]) => event).filter(e => e.type === 'VEVENT');
     events = events.map(event => {
       const start = new Date(event.start);
@@ -356,6 +355,8 @@ class Calendar extends WidgetTemplate {
         start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) === '00:00:00' &&
         length % 86400000 === 0
       );
+
+      const isToday = now.toDateString() === event.start.toDateString();
 
       let repeat = false;
       let repeatRule = null;
@@ -372,20 +373,19 @@ class Calendar extends WidgetTemplate {
         length,
         uid,
         isWholeDay,
+        isToday,
         repeat,
         repeatRule
       };
     });
     const len = events.length;
-    const maxFuture = new Date(now + (this.config.maxDaysRepeatEventsToFuture * 24 * 60 * 60 * 1000));
+    const maxFuture = new Date(now.getTime() + (this.config.maxDaysRepeatEventsToFuture * 24 * 60 * 60 * 1000));
     for (let i = 0; i < len; i++) {
       const event = events[i];
       if (event.repeat) {
         const rule = event.repeatRule;
         console.log(event);
-        const newEvents = [...rule
-          .between(new Date(now), maxFuture)
-          .splice(0, this.config.maxEvents)
+        const newEvents = [...rule.between(now, maxFuture).splice(0, this.config.maxEvents)
           .map(date => {
             const newEvent = { ...event };
             newEvent.start = date;
@@ -396,9 +396,9 @@ class Calendar extends WidgetTemplate {
       }
     }
     return events
-      // .filter(e => e.start.getTime() > now)
-      .sort((a, b) => a.start.getTime() - b.start.getTime());
-    // .splice(0, this.config.maxEvents);
+      .filter(e => e.start.getTime() > now.getTime())
+      .sort((a, b) => a.start.getTime() - b.start.getTime())
+      .splice(0, this.config.maxEvents);
   }
 
   static addEllipsisIfNeeded (string, maxLength = 10) {
@@ -450,7 +450,7 @@ class Calendar extends WidgetTemplate {
                 const start = new Date(e.start);
                 return (
                   <tr key={i} className='event'>
-                    <td className='name'>{Calendar.addEllipsisIfNeeded(e.name, 10)}</td>
+                    <td className='name'>{Calendar.addEllipsisIfNeeded(e.name, 15)}</td>
                     <td className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })}</td>
                     <td className='time'>{start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                   </tr>
