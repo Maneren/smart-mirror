@@ -19,7 +19,7 @@ class Reddit extends WidgetTemplate {
     this.state = {
       config: props.config,
       posts: [],
-      activePostIndex: 1
+      activePostIndex: 7
     };
   }
 
@@ -53,7 +53,7 @@ class Reddit extends WidgetTemplate {
   }
 
   processData (data) {
-    return data.data.children.map(post => {
+    return data.data.children.map((post, i) => {
       const postData = post.data;
       const subreddit = postData.subreddit;
       const author = postData.author;
@@ -61,18 +61,18 @@ class Reddit extends WidgetTemplate {
 
       const img = new window.Image();
       const src = postData.url_overridden_by_dest;
-      // img.src = src;
-      img.onload = e => { e.target.loaded = true; };
+      img.src = src;
+      if (i === this.state.activePostIndex) {
+        img.onload = function (e) {
+          e.target.loaded = true;
+          this.forceUpdate();
+        }.bind(this);
+      } else {
+        img.onload = e => {
+          e.target.loaded = true;
+        };
+      }
       const image = { img, src };
-
-      // const images = postData.preview.images.map(img => {
-      //   const url = img.source.url;
-      //   const image = new window.Image();
-      //   image.src = url;
-      //   image.onload = e => { e.target.loaded = true; };
-      //   const size = { w: img.source.width, h: img.source.height };
-      //   return { image, url, size };
-      // });
 
       const nsfw = postData.over_18;
       const score = postData.score;
