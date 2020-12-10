@@ -401,11 +401,6 @@ class Calendar extends WidgetTemplate {
       .splice(0, this.config.maxEvents);
   }
 
-  static addEllipsisIfNeeded (string, maxLength = 10) {
-    if (string.length >= maxLength) return string.split('').slice(0, maxLength - 3).join('') + '...';
-    else return string;
-  }
-
   async updateState () {
     if (!this.config.url || this.config.url === '') return;
 
@@ -454,7 +449,7 @@ class Calendar extends WidgetTemplate {
                       <span className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })}</span>
                       <span className='time'>{start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </td>
-                    <td className='name'>{Calendar.addEllipsisIfNeeded(e.name, 25)}</td>
+                    <td className='name'>{e.name}</td>
 
                   </tr>
                 );
