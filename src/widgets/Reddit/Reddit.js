@@ -117,9 +117,19 @@ class Reddit extends WidgetTemplate {
   render () {
     if (!this.state.loaded) return <div className='reddit-container'><Loader color='#eee' /></div>;
     const activePost = this.state.activePost;
+    const imgLoaded = activePost.image.img;
     return (
       <div className='reddit-container'>
+        <div className='head'>
+        <span className='subreddit'>r/{activePost.subreddit}</span>
+        <span className='author'> by u/{activePost.author}</span>
+        <div className='line'></div>
+        </div>
+        <div className='title'>{activePost.title}</div>
         <img src={activePost.image.src} className='img' alt='post img' />
+        <div></div>
+        <span className='score'><i class="gg-arrow-up-r"></i>{activePost.score}</span>
+        <span className='comments'><i class="gg-comment"></i>{activePost.comments}</span>
       </div>
     );
   }
