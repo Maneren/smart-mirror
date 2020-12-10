@@ -352,6 +352,11 @@ class Calendar extends WidgetTemplate {
       const description = event.description;
       const uid = event.uid;
 
+      const isWholeDay = (
+        start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) === '00:00:00' &&
+        length % 86400000 === 0
+      );
+
       let repeat = false;
       let repeatRule = null;
       if (event.rrule) {
@@ -366,6 +371,7 @@ class Calendar extends WidgetTemplate {
         end,
         length,
         uid,
+        isWholeDay,
         repeat,
         repeatRule
       };
@@ -395,6 +401,11 @@ class Calendar extends WidgetTemplate {
     // .splice(0, this.config.maxEvents);
   }
 
+  static addEllipsisIfNeeded (string, maxLength = 10) {
+    if (string.length >= maxLength) return string.splice(maxLength - 3 - 1, 0) + '...';
+    else return string;
+  }
+
   async updateState () {
     if (!this.config.url || this.config.url === '') return;
 
@@ -420,7 +431,8 @@ class Calendar extends WidgetTemplate {
   }
 
   render () {
-    if (this.config.url === '') return (<div className='calendar-container'>Missing source</div>);
+    if (this.config.url === '') return (<div className='calendar-container'>Missing source URL</div>);
+
     if (!this.state.loaded) {
       return (
         <div className='calendar-container'>
