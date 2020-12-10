@@ -9,7 +9,7 @@ import ical from 'ical';
 // import moment from 'moment';
 
 class Calendar extends WidgetTemplate {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.defaults = {
       url: '',
@@ -22,7 +22,7 @@ class Calendar extends WidgetTemplate {
     };
   }
 
-  get config () {
+  get config() {
     return {
       ...this.defaults,
       ...this.state.config
@@ -39,18 +39,18 @@ class Calendar extends WidgetTemplate {
   //   return keys.map(key => this.getConfig(key));
   // }
 
-  componentDidMount () {
+  componentDidMount() {
     super.componentDidMount();
     this.initialize();
     this.internalClock = setInterval(this.updateState.bind(this), 120000);
   }
 
-  initialize () {
+  initialize() {
     this.updateState();
     this.internalClock = setInterval(this.updateState.bind(this), 120000);
   }
 
-  processData (data) {
+  processData(data) {
     // const eventDate = function (event, time) {
     //   return event[time].length === 8 ? moment(event[time], 'YYYYMMDD') : moment(new Date(event[time]));
     // };
@@ -395,7 +395,7 @@ class Calendar extends WidgetTemplate {
     // .splice(0, this.config.maxEvents);
   }
 
-  async updateState () {
+  async updateState() {
     if (!this.config.url || this.config.url === '') return;
 
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
@@ -415,11 +415,11 @@ class Calendar extends WidgetTemplate {
     this.setState({ events: data, loaded: true });
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     clearInterval(this.internalClock);
   }
 
-  render () {
+  render() {
     if (this.config.url === '') return (<div className='calendar-container'>Missing source</div>);
     if (!this.state.loaded) {
       return (
@@ -431,18 +431,22 @@ class Calendar extends WidgetTemplate {
 
     return (
       <div className='calendar-container'>
-        {this.state.events.map(
-          (e, i) => {
-            const start = new Date(e.start);
-            return (
-              <div key={i} className='event'>
-                <div>
-                  <span className='name'>{e.name}</span> - <span className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })} {start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                </div>
-              </div>
-            );
-          }
-        )}
+        <table>
+          <tbody>
+            {this.state.events.map(
+              (e, i) => {
+                const start = new Date(e.start);
+                return (
+                  <tr key={i} className='event'>
+                    <td className='name' >{e.name}</td>
+                    <td className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })}</td>
+                    <td className='time'>{start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                  </tr>
+                );
+              }
+            )}
+          </tbody>
+        </table>
       </div>
     );
   }

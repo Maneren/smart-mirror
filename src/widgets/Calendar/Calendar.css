@@ -1,11 +1,5 @@
-.bakalari-container td {
-  border: solid 1px white;
-}
-
-.bakalari-container .weekday {
-  min-width: 80px;
-}
-
-.bakalari-container .lesson {
-  min-width: 50px;
+.calendar-container .name {
+  font-size: 1.5rem;
+  width: 2rem;
+  text-align: left;
 }
