@@ -450,9 +450,12 @@ class Calendar extends WidgetTemplate {
                 const start = new Date(e.start);
                 return (
                   <tr key={i} className='event'>
-                    <td className='name'>{Calendar.addEllipsisIfNeeded(e.name, 15)}</td>
-                    <td className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })}</td>
-                    <td className='time'>{start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                    <td className='datetime'>
+                      <span className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })}</span>
+                      <span className='time'>{start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    </td>
+                    <td className='name'>{Calendar.addEllipsisIfNeeded(e.name, 25)}</td>
+
                   </tr>
                 );
               }
