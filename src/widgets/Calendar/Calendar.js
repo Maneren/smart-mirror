@@ -377,7 +377,7 @@ class Calendar extends WidgetTemplate {
       if (event.repeat) {
         const rule = event.repeatRule;
         console.log(event);
-        events.push(...rule
+        const newEvents = [...rule
           .between(new Date(now), maxFuture)
           .splice(0, this.config.maxEvents)
           .map(date => {
@@ -385,14 +385,14 @@ class Calendar extends WidgetTemplate {
             newEvent.start = date;
             newEvent.end = new Date(date.getTime() + event.length);
             return newEvent;
-          })
-        );
+          })];
+        events.push(...newEvents);
       }
     }
     return events
       // .filter(e => e.start.getTime() > now)
-      .sort((a, b) => a.start.getTime() - b.start.getTime())
-      // .splice(0, this.config.maxEvents);
+      .sort((a, b) => a.start.getTime() - b.start.getTime());
+    // .splice(0, this.config.maxEvents);
   }
 
   async updateState () {
@@ -432,13 +432,16 @@ class Calendar extends WidgetTemplate {
     return (
       <div className='calendar-container'>
         {this.state.events.map(
-          (e, i) => (
-            <div key={i} className='event'>
-              <div>
-                <span className='name'>{e.name}</span> - <span className='date'>{new Date(e.start).toLocaleDateString()}</span>
+          (e, i) => {
+            const start = new Date(e.start);
+            return (
+              <div key={i} className='event'>
+                <div>
+                  <span className='name'>{e.name}</span> - <span className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })} {start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
               </div>
-            </div>
-          )
+            );
+          }
         )}
       </div>
     );
