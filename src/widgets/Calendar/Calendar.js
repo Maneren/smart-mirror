@@ -443,18 +443,22 @@ class Calendar extends WidgetTemplate {
 
     return (
       <div className='calendar-container'>
-        {this.state.events.map(
-          (e, i) => {
-            const start = new Date(e.start);
-            return (
-              <div key={i} className='event'>
-                <div>
-                  <span className='name'>{e.name}</span> - <span className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })} {start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                </div>
-              </div>
-            );
-          }
-        )}
+        <table>
+          <tbody>
+            {this.state.events.map(
+              (e, i) => {
+                const start = new Date(e.start);
+                return (
+                  <tr key={i} className='event'>
+                    <td className='name'>{Calendar.addEllipsisIfNeeded(e.name, 5)}</td>
+                    <td className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })}</td>
+                    <td className='time'>{start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
+                  </tr>
+                );
+              }
+            )}
+          </tbody>
+        </table>
       </div>
     );
   }
