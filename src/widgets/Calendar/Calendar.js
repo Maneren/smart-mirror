@@ -402,7 +402,7 @@ class Calendar extends WidgetTemplate {
   }
 
   static addEllipsisIfNeeded (string, maxLength = 10) {
-    if (string.length >= maxLength) return string.split().splice(maxLength - 3 - 1, 0).join('') + '...';
+    if (string.length >= maxLength) return string.split('').slice(0, maxLength - 3).join('') + '...';
     else return string;
   }
 
@@ -450,7 +450,7 @@ class Calendar extends WidgetTemplate {
                 const start = new Date(e.start);
                 return (
                   <tr key={i} className='event'>
-                    <td className='name'>{Calendar.addEllipsisIfNeeded(e.name, 5)}</td>
+                    <td className='name'>{Calendar.addEllipsisIfNeeded(e.name, 10)}</td>
                     <td className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })}</td>
                     <td className='time'>{start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</td>
                   </tr>
