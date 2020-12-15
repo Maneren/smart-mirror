@@ -8,6 +8,8 @@ import Loader from '../../components/Loader';
 import ImgLoader from '../../components/ImgLoader';
 
 import Utils from '../../Utils';
+const { requestWithProxy } = Utils.Network;
+const { shuffle } = Utils.Array;
 
 class Reddit extends WidgetTemplate {
   constructor (props) {
@@ -50,24 +52,31 @@ class Reddit extends WidgetTemplate {
     });
   }
 
+  isBadImgFormat (src) {
+    return (src.search(/(\.gifv)/) !== -1) || (src.search(/(v\.redd)/) !== -1);
+  }
+
   updateState () {
     console.log('UPDATE');
-    const request = require('request-promise-native');
     const fetchLimit = Math.ceil(this.config.preloadPosts / this.config.subreddits.length);
     const requests = this.config.subreddits.map(subreddit => {
-      const query = 'https://cors-anywhere.herokuapp.com/' + `https://reddit.com/r/${subreddit}.json?limit=${fetchLimit}`;
+      const query = `https://reddit.com/r/${subreddit}.json?limit=${fetchLimit}`; // https://cors-anywhere.herokuapp.com/
 
-      return request(query, {
+      return requestWithProxy(query, {
         headers: { 'User-Agent': 'web:smart-mirror:v1 (by /u/Maneren731)' }
       });
     });
+
     Promise.all(requests).then(jsons => {
       let data = jsons
         .map(this.processData.bind(this))
         .reduce((total, current) => total.concat(current), [])
-        .filter(post => post.title);
+        .filter(post => post.title)
+        .filter(post => !this.isBadImgFormat(post.src));
+
       if (!this.config.nsfw) data = data.filter(post => !post.nsfw);
-      data = Utils.shuffle(data);
+      data = shuffle(data);
+
       this.setState({
         posts: data,
         loaded: true
@@ -86,7 +95,7 @@ class Reddit extends WidgetTemplate {
       const author = postData.author;
       const title = postData.title;
 
-      const src = 'https://cors-anywhere.herokuapp.com/' + postData.url_overridden_by_dest;
+      const src = postData.url_overridden_by_dest;
 
       const nsfw = postData.over_18;
       const score = postData.score;
@@ -128,10 +137,11 @@ class Reddit extends WidgetTemplate {
           <div className='line' />
         </div>
         <div className='title'>{activePost.title}</div>
-        <ImgLoader src={activePost.src} className='img' alt='post img' OnLoad={this.imgLoaded.bind(this)} />
-        <div />
-        <span className='score'><i className='gg-arrow-up-r' />{activePost.score}</span>
-        <span className='comments'><i className='gg-comment' />{activePost.comments}</span>
+        <ImgLoader src={activePost.src} className='img' alt='post img' OnLoad={this.imgLoaded.bind(this)} proxy='http://127.0.0.1:3100' />
+        <div>
+          <span className='score'><i className='gg-arrow-up-r' />{activePost.score}</span>
+          <span className='comments'><i className='gg-comment' />{activePost.comments}</span>
+        </div>
       </div>
     );
   }
