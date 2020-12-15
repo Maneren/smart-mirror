@@ -6,7 +6,7 @@
   color: #838383;
 }
 .reddit-container img {
-  max-height: 450px;
+  max-height: 400px;
   max-width: 400px;
   filter: grayscale(100%);
 }
