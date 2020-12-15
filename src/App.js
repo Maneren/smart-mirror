@@ -16,10 +16,6 @@ class App extends Component {
       availableWidgets: widgetsDB, // .entries().map(widget => widget.menuName),
       editMode: false
     };
-
-    this.handle = callback => {
-      this.getDataToSave = callback;
-    }; // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
   }
 
   componentDidMount () {
@@ -82,7 +78,7 @@ class App extends Component {
     return (
       <div className='App'>
         <Grid
-          setSaveCallback={this.handle}
+          setSaveCallback={callback => { this.getDataToSave = callback; }} // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
           width={2} height={3}
           editMode={this.state.editMode}
           availableWidgets={this.state.availableWidgets}
