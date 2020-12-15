@@ -6,8 +6,8 @@
   color: #838383;
 }
 .reddit-container img {
-  height: 450px;
-  width: auto;
+  max-height: 450px;
+  max-width: 400px;
   filter: grayscale(100%);
 }
 .reddit-container .title {
@@ -26,4 +26,7 @@
   border-top: 2px solid;
   width: 100%;
   height: 5px;
+}
+.reddit-container .score {
+  margin-right: 70px;
 }
