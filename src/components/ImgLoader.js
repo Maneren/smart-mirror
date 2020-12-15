@@ -28,7 +28,8 @@ export default class ImgLoader extends React.Component {
     if (this.props.src !== this.state.src) {
       this.setState({
         src: this.props.src,
-        status: this.props.src ? Status.LOADING : Status.PENDING
+        status: this.props.src ? Status.LOADING : Status.PENDING,
+        progress: 0
       }, () => this.resolveImage());
     }
   }
@@ -39,9 +40,7 @@ export default class ImgLoader extends React.Component {
 
   onProgress (event) {
     const progress = parseInt(event.loaded / event.total * 100);
-    this.setState({
-      progress: progress
-    });
+    this.setState({ progress });
   }
 
   onLoad (blob) {
@@ -62,7 +61,9 @@ export default class ImgLoader extends React.Component {
 
     this.xmlHTTP = new window.XMLHttpRequest();
 
-    this.xmlHTTP.open('GET', this.props.src, true);
+    const src = this.props.proxy ? `${this.props.proxy}/${this.props.src}` : this.props.src;
+
+    this.xmlHTTP.open('GET', src, true);
     this.xmlHTTP.responseType = 'arraybuffer';
 
     this.xmlHTTP.onerror = event => this.onError(event);
