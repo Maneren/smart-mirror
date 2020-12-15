@@ -53,7 +53,7 @@ class Reddit extends WidgetTemplate {
   }
 
   isBadImgFormat (src) {
-    return (src.search(/(\.gifv)/) !== -1) || (src.search(/(v\.redd)/) !== -1);
+    return [/(v\.redd)/, /(gfycat)/, /(\.gif)/, /(imgur)/].some(regex => src.search(regex) !== -1);
   }
 
   updateState () {
@@ -75,6 +75,7 @@ class Reddit extends WidgetTemplate {
         .filter(post => !this.isBadImgFormat(post.src));
 
       if (!this.config.nsfw) data = data.filter(post => !post.nsfw);
+      if (!this.config.allowSpoilers) data = data.filter(post => !post.spoiler);
       data = shuffle(data);
 
       this.setState({
@@ -98,6 +99,7 @@ class Reddit extends WidgetTemplate {
       const src = postData.url_overridden_by_dest;
 
       const nsfw = postData.over_18;
+      const spoiler = postData.spoiler;
       const score = postData.score;
       const comments = postData.num_comments;
 
@@ -107,6 +109,7 @@ class Reddit extends WidgetTemplate {
         title,
         src,
         nsfw,
+        spoiler,
         score,
         comments
       };
@@ -126,6 +129,11 @@ class Reddit extends WidgetTemplate {
     this.updateClock = setTimeout(this.changeImg.bind(this), this.config.imgChangeInterval * 1000);
   }
 
+  handleImgError () {
+    clearTimeout(this.updateClock);
+    this.changeImg();
+  }
+
   render () {
     if (!this.state.loaded) return <div className='reddit-container'><Loader color='#eee' /></div>;
     const activePost = this.activePost;
@@ -137,7 +145,7 @@ class Reddit extends WidgetTemplate {
           <div className='line' />
         </div>
         <div className='title'>{activePost.title}</div>
-        <ImgLoader src={activePost.src} className='img' alt='post img' OnLoad={this.imgLoaded.bind(this)} proxy='http://127.0.0.1:3100' />
+        <ImgLoader src={activePost.src} className='img' alt='post img' OnLoad={this.imgLoaded.bind(this)} OnError={this.handleImgError.bind(this)} proxy='http://127.0.0.1:3100' />
         <div>
           <span className='score'><i className='gg-arrow-up-r' />{activePost.score}</span>
           <span className='comments'><i className='gg-comment' />{activePost.comments}</span>

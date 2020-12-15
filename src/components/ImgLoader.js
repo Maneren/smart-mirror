@@ -36,6 +36,7 @@ export default class ImgLoader extends React.Component {
 
   onError (event) {
     console.log('Error :', event);
+    if (this.props.onError) this.props.onError(event);
   }
 
   onProgress (event) {
@@ -84,7 +85,7 @@ export default class ImgLoader extends React.Component {
     }
 
     if (this.state.status === Status.LOADED) {
-      return <img src={this.state.blob} className={this.props.className} alt={this.props.alt} />;
+      return <img src={this.state.blob} className={this.props.className} alt={this.props.alt} onError={E => { console.log(this.props.src); }} />;
     }
 
     if (this.state.status === Status.PENDING) {
