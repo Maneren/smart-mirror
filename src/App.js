@@ -13,9 +13,13 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      availableWidgets: widgetsDB,
+      availableWidgets: widgetsDB, // .entries().map(widget => widget.menuName),
       editMode: false
     };
+
+    this.handle = callback => {
+      this.getDataToSave = callback;
+    }; // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
   }
 
   componentDidMount () {
@@ -71,10 +75,6 @@ class App extends Component {
   }
 
   render () {
-    const handle = function (callback) {
-      this.getDataToSave = callback;
-    }.bind(this); // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
-
     if (this.state.widgets === undefined) {
       return (<Loader />);
     }
@@ -82,7 +82,7 @@ class App extends Component {
     return (
       <div className='App'>
         <Grid
-          setSaveCallback={handle}
+          setSaveCallback={this.handle}
           width={2} height={3}
           editMode={this.state.editMode}
           availableWidgets={this.state.availableWidgets}
