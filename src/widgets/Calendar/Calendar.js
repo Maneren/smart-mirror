@@ -6,7 +6,8 @@ import './Calendar.css';
 import Loader from '../../components/Loader';
 
 import ical from 'ical';
-// import moment from 'moment';
+import Utils from '../../Utils';
+const { requestWithProxy } = Utils.Network;
 
 class Calendar extends WidgetTemplate {
   constructor (props) {
@@ -113,10 +114,7 @@ class Calendar extends WidgetTemplate {
     await sleep(Math.random() * 2000 + 500);
     console.log('UPDATE');
 
-    const url = 'https://cors-anywhere.herokuapp.com/' + this.config.url;
-
-    const request = require('request-promise-native');
-    const ical = await request(url);
+    const ical = await requestWithProxy(this.config.url);
 
     const data = this.processData(ical);
 
