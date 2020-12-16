@@ -49,7 +49,7 @@ class App extends Component {
     //   });
     // });
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
-    await sleep(Math.random() * 1000 + 500);
+    await sleep(Math.random() * 1000 + 1000);
     // console.log(data);
     return data;
   }
@@ -72,7 +72,7 @@ class App extends Component {
 
   render () {
     if (this.state.widgets === undefined) {
-      return (<Loader />);
+      return (<div className='App-loading'><Loader /></div>);
     }
 
     return (
@@ -85,7 +85,7 @@ class App extends Component {
           widgets={this.state.widgets}
           configs={this.state.configs}
         />
-        <Button onClick={this.handleSaveConfig.bind(this)}>TEST</Button>
+        <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST</Button>
       </div>
     );
   }
