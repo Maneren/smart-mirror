@@ -6,7 +6,6 @@ import './Bakalari.css';
 
 import Loader from '../../components/Loader';
 
-// import json from './test.json';
 import User from './user.js';
 
 class Bakalari extends WidgetTemplate {
@@ -21,26 +20,27 @@ class Bakalari extends WidgetTemplate {
     };
   }
 
-  getConfig (key) {
-    if (this.state.config[key] !== undefined) return this.state.config[key];
-    else if (this.defaults[key] !== undefined) return this.defaults[key];
-    else throw new Error('unknown config key: ' + key);
+  static get menuName () { return 'Bakaláři'; }
+
+  get config () {
+    return {
+      ...this.defaults,
+      ...this.state.config
+    };
   }
 
-  getConfigs (...keys) {
-    return keys.map(key => this.getConfig(key));
+  getDataToSave () {
+    return { type: this.constructor.name, config: { ...this.state.config, credentials: 'Bakalari' } };
   }
 
   componentDidMount () {
     super.componentDidMount();
     this.initialize();
-    this.internalClock = setInterval(this.updateState.bind(this), 120000);
   }
 
   initialize () {
-    const getConfigs = this.getConfigs.bind(this);
-
-    const user = new User(...getConfigs('username', 'password', 'server'));
+    const { username, password, server } = this.config.credentials;
+    const user = new User(username, password, server);
     user.onReady(this.updateState.bind(this));
     this.setState({ user });
 
@@ -119,10 +119,10 @@ class Bakalari extends WidgetTemplate {
       timetable[i].lessons = lessons;
     }
 
-    // make aal days same lenght by appending blank lessons
+    // make all days same lenght by appending blank lessons
     const maxLength = timetable.reduce((max, current) => Math.max(max, current.lessons.length), -1);
     const toFixedLengthArr = (arr, len) => [...arr, ...(new Array(len - arr.length).fill({}))];
-    timetable.map(day => { day.lessons = toFixedLengthArr(day.lessons, maxLength); });
+    timetable.map(day => { day.lessons = toFixedLengthArr(day.lessons, maxLength); return null; });
 
     timetable.maxDayLength = maxLength;
 
@@ -132,16 +132,17 @@ class Bakalari extends WidgetTemplate {
 
   async updateState () {
     const endpoint = User.endpoints.ACTUAL_TIMETABLE;
-    const json = await this.state.user.getData(endpoint /* { date: '2020-09-18' } */);
+    const json = await this.state.user.getData(endpoint /* ,{ date: '2020-09-18' } */);
     console.log(json);
     const data = Bakalari.processData(json, endpoint);
     this.setState({ timetable: data, loaded: true });
   }
 
   get missingCredentials () {
-    return (!this.getConfig('server') || this.getConfig('server') === '') ||
-           (!this.getConfig('username') || this.getConfig('username') === '') ||
-           (!this.getConfig('password') || this.getConfig('password') === '');
+    const { server, username, password } = this.config.credentials;
+    return (!server || server === '') ||
+           (!username || username === '') ||
+           (!password || password === '');
   }
 
   componentWillUnmount () {
@@ -194,7 +195,5 @@ class Bakalari extends WidgetTemplate {
     );
   }
 }
-
-Bakalari.menuName = 'Bakaláři';
 
 export default Bakalari;

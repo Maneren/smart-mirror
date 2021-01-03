@@ -4,6 +4,7 @@ import './App.css';
 
 import Grid from './components/Grid';
 import Loader from './components/Loader';
+import Pagination from './components/Pagination';
 
 import widgetsDB from './widgets';
 
@@ -14,26 +15,38 @@ class App extends Component {
     super(props);
     this.state = {
       availableWidgets: widgetsDB, // .entries().map(widget => widget.menuName),
-      editMode: false
+      editMode: false,
+      pages: undefined,
+      activePage: 0
     };
+    this.handlesForDataToSave = [];
   }
 
   componentDidMount () {
     this.loadConfig().then(
       data => {
-        const widgets = data.map(
-          widget => {
-            const type = widget.type;
-            if (widget.hide || type === '') return widgetsDB.Null;
-            else if (widgetsDB[type] !== undefined) return widgetsDB[type];
-            else return widgetsDB.Error;
-          }
+        const pages = data.pages.map(page =>
+          page.map(
+            widget => {
+              const type = widget.type;
+              if (widget.hide || type === '') return widgetsDB.Null;
+              else if (widgetsDB[type] !== undefined) return widgetsDB[type];
+              else return widgetsDB.Error;
+            }
+          )
         );
 
-        const configs = data.map(widget => widget.config === undefined ? {} : widget.config);
+        const { apiKeys, credentials } = data;
+
+        const configs = data.pages.map(page => page.map(widget => widget.config === undefined ? {} : widget.config));
+        const configsWithApiKeysAndCredentials = configs.map(configs => configs.map(config => {
+          if (config.apiKey) return { ...config, apiKey: apiKeys[config.apiKey] };
+          else if (config.credentials) return { ...config, credentials: credentials[config.credentials] };
+          else return config;
+        }));
 
         // console.log(widgets, configs);
-        this.setState({ widgets, configs });
+        this.setState({ pages, configs: configsWithApiKeysAndCredentials, apiKeys, credentials });
       }
     );
   }
@@ -41,7 +54,7 @@ class App extends Component {
   async loadConfig () {
     // const fs = await window.require('fs');
 
-    // const data = await new Promise((resolve, reject) => {
+    // return await new Promise((resolve, reject) => {
     //   // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
     //   fs.readFile('.src/config/config.json', 'utf8', (err, data) => {
     //     if (err) reject(err);
@@ -50,15 +63,14 @@ class App extends Component {
     // });
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
     await sleep(Math.random() * 1000 + 1000);
-    // console.log(data);
     return data;
   }
 
   async handleSaveConfig () {
-    const data = this.getDataToSave();
+    const data = this.dataToSave;
 
     console.log(data);
-    console.log(JSON.stringify(data));
+    console.log(JSON.stringify(data, null, 2));
 
     // const fs = await window.require('fs');
     // return await new Promise((resolve, reject) => {
@@ -70,21 +82,31 @@ class App extends Component {
     // });
   }
 
+  get dataToSave () {
+    const { apiKeys, credentials } = this.state;
+    return { credentials, apiKeys, pages: this.handlesForDataToSave.map(f => f()) };
+  }
+
   render () {
-    if (this.state.widgets === undefined) {
+    if (this.state.pages === undefined) {
       return (<div className='App-loading'><Loader /></div>);
     }
-
+    this.handlesForDataToSave = [];
     return (
-      <div className='App'>
-        <Grid
-          setSaveCallback={callback => { this.getDataToSave = callback; }} // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
-          width={2} height={3}
-          editMode={this.state.editMode}
-          availableWidgets={this.state.availableWidgets}
-          widgets={this.state.widgets}
-          configs={this.state.configs}
-        />
+      <div className='App-container'>
+        <Pagination activePage={this.state.activePage}>
+          {this.state.pages.map((_, i) => (
+            <Grid
+              key={i}
+              setSaveCallback={callback => { this.handlesForDataToSave.push(callback); }} // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
+              width={2} height={3}
+              editMode={this.state.editMode}
+              availableWidgets={this.state.availableWidgets}
+              widgets={this.state.pages[i]}
+              configs={this.state.configs[i]}
+            />
+          ))}
+        </Pagination>
         <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST</Button>
       </div>
     );

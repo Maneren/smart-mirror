@@ -47,14 +47,15 @@ class CurrentWeather extends WidgetTemplate {
     };
   }
 
-  getConfig (key) {
-    if (this.state.config[key] !== undefined) return this.state.config[key];
-    else if (this.defaults[key] !== undefined) return this.defaults[key];
-    else throw new Error('unknown key');
+  get config () {
+    return {
+      ...this.defaults,
+      ...this.state.config
+    };
   }
 
-  getConfigs (...keys) {
-    return keys.map(key => this.getConfig(key));
+  getDataToSave () {
+    return { type: this.constructor.name, config: { ...this.state.config, apiKey: 'OpenWeather' } };
   }
 
   componentDidMount () {
@@ -64,7 +65,8 @@ class CurrentWeather extends WidgetTemplate {
   }
 
   updateState () {
-    if (!this.getConfig('apiKey') || this.getConfig('apiKey') === '') return;
+    const { apiKey } = this.config;
+    if (!apiKey || apiKey === '') return;
 
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
     sleep(Math.random() * 2000 + 500).then(() => {
@@ -73,7 +75,7 @@ class CurrentWeather extends WidgetTemplate {
       this.setState({ weather: data, loaded: true });
     });
 
-    // const [url, apiKey, location] = this.getConfigs('url', 'apiKey', 'location');
+    // const [url, location] = this.getConfigs('url', 'apiKey', 'location');
     // console.log(url, apiKey, location);
     // const query = `${url}?appid=${apiKey}&q=${location}&units=metric`;
 
@@ -164,11 +166,11 @@ class CurrentWeather extends WidgetTemplate {
   }
 
   render () {
-    if (!this.getConfig('apiKey') || this.getConfig('apiKey') === '') return (<div className='weather-container'>No API key</div>);
+    const { apiKey } = this.config;
+    if (!apiKey || apiKey === '') return (<div className='weather-container'>No API key</div>);
 
     const weather = this.state.weather;
-    const getConfig = this.getConfig.bind(this);
-    const degreeLabel = getConfig('degreeLabel');
+    const degreeLabel = this.config.degreeLabel;
 
     const loading = <div className='weather-container'><Loader color='#eee' /></div>;
     const loaded = (

@@ -30,12 +30,12 @@ class Calendar extends WidgetTemplate {
     };
   }
 
-  componentDidMount () {
-    super.componentDidMount();
-    this.initialize();
+  getDataToSave () {
+    return { type: this.constructor.name, config: { ...this.state.config, credentials: 'Calendar' } };
   }
 
-  initialize () {
+  componentDidMount () {
+    super.componentDidMount();
     this.updateState();
     this.internalClock = setInterval(this.updateState.bind(this), 180000);
   }
@@ -108,13 +108,14 @@ class Calendar extends WidgetTemplate {
   }
 
   async updateState () {
-    if (!this.config.url || this.config.url === '') return;
+    const { url } = this.config.credentials;
+    if (!url || url === '') return;
 
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
     await sleep(Math.random() * 2000 + 500);
     console.log('UPDATE');
 
-    const ical = await requestWithProxy(this.config.url);
+    const ical = await requestWithProxy(url);
 
     const data = this.processData(ical);
 
@@ -127,7 +128,7 @@ class Calendar extends WidgetTemplate {
   }
 
   render () {
-    if (this.config.url === '') return (<div className='calendar-container'>Missing source URL</div>);
+    if (this.config.credentials.url === '') return (<div className='calendar-container'>Missing source URL</div>);
 
     if (!this.state.loaded) {
       return (
