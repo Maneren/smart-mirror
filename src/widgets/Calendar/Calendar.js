@@ -148,7 +148,7 @@ class Calendar extends WidgetTemplate {
                   <tr key={i} className='event'>
                     <td className='datetime'>
                       <span className='date'>{start.toLocaleDateString('cs-CZ', { month: 'long', day: 'numeric' })}</span>
-                      <span className='time'>{start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                      <span className='time'>{e.isWholeDay ? 'celodenní' : start.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                     </td>
                     <td className='name'>{e.name}</td>
 
