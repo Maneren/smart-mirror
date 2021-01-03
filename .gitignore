@@ -21,6 +21,7 @@ config.json.bak
 .env.development.local
 .env.test.local
 .env.production.local
+*cache
 
 debug.log*
 npm-debug.log*
