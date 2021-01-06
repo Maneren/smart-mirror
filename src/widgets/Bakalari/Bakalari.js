@@ -7,6 +7,7 @@ import './Bakalari.css';
 import Loader from '../../components/Loader';
 
 import User from './user.js';
+import Utils from '../../Utils.js';
 
 class Bakalari extends WidgetTemplate {
   constructor (props) {
@@ -53,6 +54,8 @@ class Bakalari extends WidgetTemplate {
         return this.processTimetable(data);
       case User.endpoints.MARKS:
         return this.processMarks(data);
+      default:
+        throw new Error('Unknown endpoint');
     }
   }
 
@@ -168,6 +171,7 @@ class Bakalari extends WidgetTemplate {
       else return (<td key={i} className='lesson blank' />);
     };
 
+    const { mapRng, range } = Utils.General;
     const timetable = this.state.timetable;
     return (
       <div className='bakalari-container'>
@@ -175,7 +179,7 @@ class Bakalari extends WidgetTemplate {
           <thead>
             <tr className='hours'>
               <th key={0} />
-              {new Array(timetable.maxDayLength).fill(0).map((x, i) => <th key={i}>{i + 1}</th>)}
+              {mapRng(range(1, timetable.maxDayLength + 1), i => <th key={i}>{i}</th>)}
             </tr>
           </thead>
           <tbody>

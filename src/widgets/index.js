@@ -6,6 +6,9 @@ import Null from './Null/Null';
 import Reddit from './Reddit/Reddit';
 import Bakalari from './Bakalari/Bakalari';
 import Calendar from './Calendar/Calendar';
+import Spotify from './Spotify/Spotify';
+import WifiQRCode from './WifiQRCode/WifiQRCode';
+import Youtube from './Youtube/Youtube';
 
-const content = { Null, Error, Time, WeatherForecast, CurrentWeather, Reddit, Bakalari, Calendar };
+const content = { Null, Error, Time, WeatherForecast, CurrentWeather, Reddit, Bakalari, Calendar, Spotify, WifiQRCode, Youtube };
 export default content;

@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 class WidgetTemplate extends Component {
   getDataToSave () {
-    return { type: this.constructor.name, config: this.state.config };
+    return { type: this.constructor.name, config: this.props.config };
   }
 
   componentDidMount () {

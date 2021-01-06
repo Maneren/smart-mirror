@@ -10,7 +10,8 @@ class Grid extends Component {
   }
 
   get numberOfTiles () {
-    return this.props.width * this.props.height;
+    const { width, height } = this.props.options;
+    return width * height;
   }
 
   passCallbacks () {
@@ -22,7 +23,7 @@ class Grid extends Component {
   }
 
   render () {
-    const handle = function (callback, i) {
+    const handle = (callback, i) => {
       this.callbacksForDataToSave[i] = callback;
 
       const savedCallbacks = this.callbacksForDataToSave.reduce(
@@ -30,9 +31,17 @@ class Grid extends Component {
         0
       );
       if (savedCallbacks === this.numberOfTiles) this.passCallbacks();
-    }.bind(this); // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
+    }; // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
+
+    const { width, height, widgets, configs } = this.props.options;
     return (
-      <div className='grid-container'>
+      <div
+        className='grid-container'
+        style={{
+          gridTemplateColumns: `repeat(${width}, 1fr)`,
+          gridTemplateRows: `repeat(${height}, 1fr)`
+        }}
+      >
         {[...Array(this.numberOfTiles)].map((e, i) =>
           <Tile
             key={i}
@@ -40,8 +49,8 @@ class Grid extends Component {
             setSaveCallback={handle}
             editMode={this.props.editMode}
             availableWidgets={this.props.availableWidgets}
-            widget={this.props.widgets[i]}
-            config={this.props.configs[i]}
+            widget={widgets[i]}
+            config={configs[i]}
           />)}
       </div>
     );

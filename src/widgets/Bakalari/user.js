@@ -1,3 +1,5 @@
+import request from 'request-promise-native';
+
 class User {
   constructor (username, password, server) {
     this.server = server;
@@ -6,6 +8,14 @@ class User {
     this.refreshToken = null;
     this.onReadyListener = () => null;
     this.getToken(username, password).then(() => this.onReadyListener());
+  }
+
+  static get endpoints () {
+    return {
+      ACTUAL_TIMETABLE: 'timetable/actual',
+      USER: 'user',
+      MARKS: 'marks'
+    };
   }
 
   async auth (data) {
@@ -21,7 +31,6 @@ class User {
       }
     };
 
-    const request = require('request-promise-native');
     const response = await request(options);
     return JSON.parse(response);
   }
@@ -32,6 +41,7 @@ class User {
     if (this.refreshToken == null) {
       response = await this.auth({ client_id: 'ANDR', grant_type: 'password', username, password });
     } else {
+      console.log('REFRESH TOKEN');
       response = await this.auth({ client_id: 'ANDR', grant_type: 'refresh_token', refresh_token: this.refreshToken });
     }
 
@@ -73,11 +83,5 @@ class User {
     return this;
   }
 }
-
-User.endpoints = {
-  ACTUAL_TIMETABLE: 'timetable/actual',
-  USER: 'user',
-  MARKS: 'marks'
-};
 
 export default User;

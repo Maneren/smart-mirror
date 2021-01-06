@@ -14,7 +14,7 @@ class App extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      availableWidgets: widgetsDB, // .entries().map(widget => widget.menuName),
+      availableWidgets: widgetsDB,
       editMode: false,
       pages: undefined,
       activePage: 0
@@ -25,28 +25,31 @@ class App extends Component {
   componentDidMount () {
     this.loadConfig().then(
       data => {
-        const pages = data.pages.map(page =>
-          page.map(
-            widget => {
-              const type = widget.type;
-              if (widget.hide || type === '') return widgetsDB.Null;
-              else if (widgetsDB[type] !== undefined) return widgetsDB[type];
-              else return widgetsDB.Error;
-            }
-          )
-        );
-
         const { apiKeys, credentials } = data;
-
-        const configs = data.pages.map(page => page.map(widget => widget.config === undefined ? {} : widget.config));
-        const configsWithApiKeysAndCredentials = configs.map(configs => configs.map(config => {
-          if (config.apiKey) return { ...config, apiKey: apiKeys[config.apiKey] };
-          else if (config.credentials) return { ...config, credentials: credentials[config.credentials] };
-          else return config;
-        }));
-
-        // console.log(widgets, configs);
-        this.setState({ pages, configs: configsWithApiKeysAndCredentials, apiKeys, credentials });
+        const pages = data.pages.map(page => {
+          return {
+            widgets: page.widgets.map(
+              widget => {
+                const type = widget.type;
+                if (widget.hide || type === '') return widgetsDB.Null;
+                else if (widgetsDB[type] !== undefined) return widgetsDB[type];
+                else return widgetsDB.Error;
+              }
+            ),
+            configs: page.widgets
+              .map(widget => widget.config === undefined ? {} : widget.config)
+              .map(config => {
+                if (config.apiKey) return { ...config, apiKey: apiKeys[config.apiKey] };
+                else if (config.credentials) return { ...config, credentials: credentials[config.credentials] };
+                else return config;
+              }),
+            width: page.width,
+            height: page.height
+          };
+        }
+        );
+        console.log(pages);
+        this.setState({ pages, apiKeys, credentials });
       }
     );
   }
@@ -89,21 +92,20 @@ class App extends Component {
 
   render () {
     if (this.state.pages === undefined) {
-      return (<div className='App-loading'><Loader /></div>);
+      return (<div className='App App-loading'><Loader color='#eee' /></div>);
     }
     this.handlesForDataToSave = [];
+
     return (
-      <div className='App-container'>
+      <div className='App'>
         <Pagination activePage={this.state.activePage}>
-          {this.state.pages.map((_, i) => (
+          {this.state.pages.map((page, i) => (
             <Grid
               key={i}
               setSaveCallback={callback => { this.handlesForDataToSave.push(callback); }} // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
-              width={2} height={3}
+              options={page}
               editMode={this.state.editMode}
               availableWidgets={this.state.availableWidgets}
-              widgets={this.state.pages[i]}
-              configs={this.state.configs[i]}
             />
           ))}
         </Pagination>

@@ -148,11 +148,11 @@ class Reddit extends WidgetTemplate {
         <ImgLoader src={activePost.src} className='img' alt='post img' OnLoad={this.imgLoaded.bind(this)} OnError={this.handleImgError.bind(this)} proxy='http://127.0.0.1:3100' />
         <div className='comments-score'>
           <span className='score'>
-            <img src='assets/upvote.svg' />
+            <img src='assets/upvote.svg' alt='upvote icon' />
             <span>{activePost.score}</span>
           </span>
           <span className='comments'>
-            <img src='assets/comments.svg' />
+            <img src='assets/comments.svg' alt='comments icon' />
             <span>{activePost.comments}</span>
           </span>
         </div>
