@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "./WifiQRCode.css";
 import WidgetTemplate from '../template.js';
 
 class WifiQRCode extends WidgetTemplate {
@@ -24,7 +24,16 @@ class WifiQRCode extends WidgetTemplate {
         }
       )
     ;
-    return (<div className='qr-code-container'><img src={url} alt='wifi qr code' /></div>);
+    return ( 
+    <div className='qr-code-container'>
+
+    <span className='WifiText'> QR code for {ssid}</span>
+    <br/>
+    <img className='QrWifi' src={url} alt='wifi qr code' />
+    
+    </div>
+    
+    );
   }
 }
 

@@ -1,0 +1,12 @@
+.qr-code-container {
+width:auto;
+
+}
+.qr-code-container .WifiText {
+font-size: 3rem;
+}
+
+.qr-code-container .QrWifi{
+height: 300px;
+width: auto;
+}

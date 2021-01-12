@@ -1,5 +1,5 @@
 import React from 'react';
-
+import "./Youtube.css";
 import WidgetTemplate from '../template';
 import Loader from '../../components/Loader';
 import Utils from '../../Utils';
@@ -40,6 +40,7 @@ class Youtube extends WidgetTemplate {
       <div className='youtube-container'>
         {!loaded ? <Loader color='#eee' /> : null}
         <iframe
+          className="yt-video"
           title='Youtube'
           width='560'
           height='315'

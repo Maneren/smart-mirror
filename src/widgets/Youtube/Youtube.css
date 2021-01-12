@@ -1,0 +1,4 @@
+.youtube-container .yt-video {
+width: 1000px;
+height: calc(9/16*1000px);
+}
