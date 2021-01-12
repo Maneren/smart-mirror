@@ -19,6 +19,18 @@ class Array {
   static randomIndex (arr) {
     return Math.floor(Math.random() * arr.length);
   }
+
+  static generateArr (length, f = _ => undefined) {
+    const { range, mapRng } = General;
+    return mapRng(range(length), f);
+  }
+
+  static toFixedLengthArr (arr, len, f = _ => undefined) {
+    return [
+      ...arr,
+      ...Array.generateArr(len - arr.length, f)
+    ];
+  }
 }
 class General {
   static randint () {
@@ -71,6 +83,33 @@ class General {
 class Network {
   static requestWithProxy (url, options) {
     return request(`http://127.0.0.1:3100/${url}`, options);
+  }
+
+  static decodeURL (url) {
+    if (typeof url === 'string') {
+      let prefix;
+      if (url[4] === ':') prefix = 'http://';
+      else if (url[5] === ':') prefix = 'https://';
+
+      url = url.substr(8);
+
+      const [domain, ...target] = url.split('/');
+      const [page, params] = target[target.length - 1].split('?');
+
+      const parameters = {};
+      params.split('&').forEach(param => {
+        const [key, value] = param.split('=');
+        parameters[key] = value;
+      });
+
+      return {
+        prefix,
+        domain,
+        pages: target,
+        page,
+        parameters
+      };
+    }
   }
 }
 

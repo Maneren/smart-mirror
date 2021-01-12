@@ -71,7 +71,11 @@ export default class ImgLoader extends React.Component {
     this.xmlHTTP.onprogress = event => this.onProgress(event);
     this.xmlHTTP.onload = event => this.onLoad(new window.Blob([this.xmlHTTP.response]));
 
-    this.xmlHTTP.send();
+    try {
+      this.xmlHTTP.send();
+    } catch (error) {
+      this.onError(error);
+    }
   }
 
   render () {

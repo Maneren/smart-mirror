@@ -36,6 +36,7 @@ class User {
   }
 
   async getToken (username, password) {
+    clearTimeout(this.refreshTimeout);
     let response = null;
 
     if (this.refreshToken == null) {
@@ -47,7 +48,7 @@ class User {
 
     this.accessToken = response.access_token;
     this.refreshToken = response.refresh_token;
-    setTimeout(this.getToken.bind(this), response.expires_in * 1000);
+    this.refreshTimeout = setTimeout(this.getToken.bind(this), (response.expires_in - 10) * 1000);
   }
 
   static toURLEncoded (object) {
@@ -74,7 +75,7 @@ class User {
       const request = require('request-promise-native');
       const response = await request(`${uri}?${parameters}`, requestOptions);
       // console.log(response);
-      return JSON.parse(response);
+      return response;
     }
   }
 

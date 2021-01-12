@@ -13,11 +13,14 @@ class Bakalari extends WidgetTemplate {
   constructor (props) {
     super(props);
     this.defaults = {
+      maxErrors: 5,
+      errorTimeout: 2000
     };
     this.state = {
       config: props.config,
       user: null,
-      loaded: false
+      loaded: false,
+      errorCount: 0
     };
   }
 
@@ -44,11 +47,10 @@ class Bakalari extends WidgetTemplate {
     const user = new User(username, password, server);
     user.onReady(this.updateState.bind(this));
     this.setState({ user });
-
-    this.internalClock = setInterval(this.updateState.bind(this), 120000);
   }
 
-  static processData (data, type) {
+  static processData (json, type) {
+    const data = JSON.parse(json);
     switch (type) {
       case User.endpoints.ACTUAL_TIMETABLE:
         return this.processTimetable(data);
@@ -123,22 +125,38 @@ class Bakalari extends WidgetTemplate {
     }
 
     // make all days same lenght by appending blank lessons
-    const maxLength = timetable.reduce((max, current) => Math.max(max, current.lessons.length), -1);
-    const toFixedLengthArr = (arr, len) => [...arr, ...(new Array(len - arr.length).fill({}))];
-    timetable.map(day => { day.lessons = toFixedLengthArr(day.lessons, maxLength); return null; });
-
+    const maxLength = timetable.reduce((max, current) => Math.max(max, current.lessons.length), 0);
+    const { toFixedLengthArr } = Utils.Array;
+    timetable.map(day => { day.lessons = toFixedLengthArr(day.lessons, maxLength, _ => { return { blank: true }; }); return null; });
     timetable.maxDayLength = maxLength;
 
-    console.log(timetable);
+    // console.log(timetable);
     return timetable;
   }
 
   async updateState () {
+    if (this.state.errorCount > this.config.maxErrors) return;
+    console.log('UPDATE');
     const endpoint = User.endpoints.ACTUAL_TIMETABLE;
-    const json = await this.state.user.getData(endpoint /* ,{ date: '2020-09-18' } */);
-    console.log(json);
-    const data = Bakalari.processData(json, endpoint);
-    this.setState({ timetable: data, loaded: true });
+    try {
+      const json = await this.state.user.getData(endpoint /* ,{ date: '2020-09-18' } */);
+      // console.log(json);
+
+      const data = Bakalari.processData(json, endpoint);
+      this.setState({ timetable: data, loaded: true, errorCount: 0 });
+
+      this.internalClock = setTimeout(this.updateState.bind(this), 120000);
+    } catch (error) {
+      if (error.name === 'StatusCodeError') {
+        console.error('FetchError, attempting to reauthorize');
+        this.state.user.getToken();
+
+        const { errorCount } = this.state;
+        this.setState({ errorCount: errorCount + 1 });
+
+        this.internalClock = setTimeout(this.updateState.bind(this), this.config.errorTimeout);
+      } else throw error;
+    }
   }
 
   get missingCredentials () {
@@ -149,11 +167,12 @@ class Bakalari extends WidgetTemplate {
   }
 
   componentWillUnmount () {
-    clearInterval(this.internalClock);
+    clearTimeout(this.internalClock);
   }
 
   render () {
     if (this.missingCredentials) return (<div className='bakalari-container'>Missing credentials</div>);
+    if (this.state.errorCount > this.config.maxErrors) return (<div className='bakalari-container'>Connection error</div>);
     if (!this.state.loaded) return <div className='bakalari-container'><Loader color='#eee' /></div>;
 
     const getLessonJSX = (lesson, i) => {

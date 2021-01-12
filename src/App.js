@@ -90,6 +90,16 @@ class App extends Component {
     return { credentials, apiKeys, pages: this.handlesForDataToSave.map(f => f()) };
   }
 
+  nextPage () {
+    const { activePage, pages } = this.state;
+    this.setState({ activePage: (activePage + 1) % pages.length });
+  }
+
+  previousPage () {
+    const { activePage, pages } = this.state;
+    this.setState({ activePage: (activePage - 1 + pages.length) % pages.length });
+  }
+
   render () {
     if (this.state.pages === undefined) {
       return (<div className='App App-loading'><Loader color='#eee' /></div>);
@@ -109,7 +119,9 @@ class App extends Component {
             />
           ))}
         </Pagination>
+        <Button className='test' onClick={this.previousPage.bind(this)}>Prev</Button>
         <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST</Button>
+        <Button className='test' onClick={this.nextPage.bind(this)}>Next</Button>
       </div>
     );
   }

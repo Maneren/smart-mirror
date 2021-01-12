@@ -53,14 +53,14 @@ class Reddit extends WidgetTemplate {
   }
 
   isBadImgFormat (src) {
-    return [/(v\.redd)/, /(gfycat)/, /(\.gif)/, /(imgur)/].some(regex => src.search(regex) !== -1);
+    return [/(v\.redd)/, /(gfycat)/, /(\.gif)/, /(imgur)/, /(gallery)/].some(regex => src.search(regex) !== -1);
   }
 
   updateState () {
     console.log('UPDATE');
     const fetchLimit = Math.ceil(this.config.preloadPosts / this.config.subreddits.length);
     const requests = this.config.subreddits.map(subreddit => {
-      const query = `https://reddit.com/r/${subreddit}.json?limit=${fetchLimit}`; // https://cors-anywhere.herokuapp.com/
+      const query = `https://reddit.com/r/${subreddit}.json?limit=${fetchLimit}`;
 
       return requestWithProxy(query, {
         headers: { 'User-Agent': 'web:smart-mirror:v1 (by /u/Maneren731)' }
@@ -129,7 +129,8 @@ class Reddit extends WidgetTemplate {
     this.updateClock = setTimeout(this.changeImg.bind(this), this.config.imgChangeInterval * 1000);
   }
 
-  handleImgError () {
+  handleImgError (error) {
+    if (error.name[0] !== '4') throw error;
     clearTimeout(this.updateClock);
     this.changeImg();
   }
@@ -145,7 +146,14 @@ class Reddit extends WidgetTemplate {
           <div className='line' />
         </div>
         <div className='title'>{activePost.title}</div>
-        <ImgLoader src={activePost.src} className='img' alt='post img' OnLoad={this.imgLoaded.bind(this)} OnError={this.handleImgError.bind(this)} proxy='http://127.0.0.1:3100' />
+        <ImgLoader
+          src={activePost.src}
+          className='img'
+          alt='post img'
+          OnLoad={this.imgLoaded.bind(this)}
+          OnError={this.handleImgError.bind(this)}
+          proxy='http://127.0.0.1:3100'
+        />
         <div className='comments-score'>
           <span className='score'>
             <img src='assets/upvote.svg' alt='upvote icon' />
