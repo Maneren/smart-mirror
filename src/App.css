@@ -39,3 +39,12 @@ header {
   margin-bottom: 10px;
   color: #999;
 }
+.App-loading{
+  
+}
+.App-loading-text{
+  color: rgb(255, 255, 255);
+  font-size: 5rem;
+}
+
+

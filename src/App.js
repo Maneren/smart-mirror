@@ -57,7 +57,7 @@ class App extends Component {
       }
     );
 
-    this.initGestureSensor();
+    //this.initGestureSensor();
   }
 
   async initGestureSensor () {
@@ -132,7 +132,7 @@ class App extends Component {
       });
     }); */
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
-    await sleep(Math.random() * 1000 + 1000);
+    await sleep(Math.random() * 1000 + 2000);
     return data;
   }
 
@@ -185,7 +185,7 @@ class App extends Component {
 
   render () {
     if (this.state.pages === undefined) {
-      return (<div className='App App-loading'><Loader color='#eee' /></div>);
+      return (<div className='App App-loading'><span className="App App-loading-text">Smart<br/> Mirror<Loader color='#eee' /></span></div>);
     }
     const { pages, editMode, availableWidgets, activePage, saveEdit } = this.state;
     return (
