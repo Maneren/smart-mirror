@@ -57,7 +57,7 @@ class Tile extends Component {
       <div className='tile-container'>
         <div style={{ display: editMode ? 'block' : 'none' }}>
           <Dropdown>
-            <Dropdown.Toggle className="Dropdown-button" variant='success' id='choose-widget'>
+            <Dropdown.Toggle className="Dropdown-button" size="lg" variant='success' id='choose-widget'>
               {dropdownLabel}
             </Dropdown.Toggle>
 
