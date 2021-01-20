@@ -84,7 +84,7 @@ class Tile extends Component {
                     switch (input.type) {
                       case 'bool':
                         return (
-                          <Form.Group key={index}>
+                          <Form.Group key={index} className = "input bool">
                             <Form.Label>{input.label}</Form.Label>
                             <Form.Control as='select' multiple>
                               <option onClick={() => this.changeConfig(input.id, true)}>Ano</option>
@@ -94,7 +94,7 @@ class Tile extends Component {
                         );
                       case 'select':
                         return (
-                          <Form.Group key={index}>
+                          <Form.Group key={index} className = "input select">
                             <Form.Label>{input.label}</Form.Label>
                             <Form.Control as='select' multiple>
                               {input.options.map(option => <option onClick={() => this.changeConfig(input.id, option.id)} key={option.id}>{option.label}</option>)}
@@ -103,7 +103,7 @@ class Tile extends Component {
                         );
                       default:
                         return (
-                          <Form.Group key={index}>
+                          <Form.Group key={index} className = "input default">
                             <Form.Label>{input.label}</Form.Label>
                             <Form.Control onChange={e => this.changeConfig(input.id, e.target.value)} type={input.type} placeholder={input.placeholder} />
                           </Form.Group>
