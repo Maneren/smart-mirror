@@ -17,8 +17,7 @@ const tryConnection = () => client.connect({ port: port }, () => {
       console.log('stdout: ' + data.toString());
     });
   }
-}
-);
+});
 
 tryConnection();
 

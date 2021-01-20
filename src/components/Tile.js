@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import './styles/Tile.css';
 
-import Dropdown from 'react-bootstrap/Dropdown';
-import { Form } from 'react-bootstrap';
+import { Form, Dropdown } from 'react-bootstrap';
 
 class Tile extends Component {
   constructor (props) {
@@ -18,8 +17,7 @@ class Tile extends Component {
   }
 
   chooseWidget (widget) {
-    const { config } = this.state.choice;
-    this.setState({ choice: { widget, config } });
+    this.setState({ choice: { widget, config: {} } });
   }
 
   changeConfig (key, val) {
@@ -85,21 +83,28 @@ class Tile extends Component {
                       case 'bool':
                         return (
                           <Form.Group key={index}>
-                            <Form.Label>{input.label}</Form.Label>
-                            <Form.Control as='select' multiple>
-                              <option onClick={() => this.changeConfig(input.id, true)}>Ano</option>
-                              <option onClick={() => this.changeConfig(input.id, false)} value='false'>Ne</option>
-                            </Form.Control>
+                            <Form.Check onChange={e => this.changeConfig(input.id, e.target.checked)} inline label={input.label} type='checkbox' />
                           </Form.Group>
                         );
                       case 'select':
                         return (
-                          <Form.Group key={index}>
-                            <Form.Label>{input.label}</Form.Label>
-                            <Form.Control as='select' multiple>
-                              {input.options.map(option => <option onClick={() => this.changeConfig(input.id, option.id)} key={option.id}>{option.label}</option>)}
-                            </Form.Control>
-                          </Form.Group>
+                          <Dropdown>
+                            <Dropdown.Toggle variant='primary' id='choose-widget'>
+                              {choice.config[input.id] ? choice.config[input.id] : input.label}
+                            </Dropdown.Toggle>
+
+                            <Dropdown.Menu>
+                              {
+                                input.options.map(option => {
+                                  return (
+                                    <Dropdown.Item onClick={() => this.changeConfig(input.id, option.id)} key={option.id}>
+                                      {option.label}
+                                    </Dropdown.Item>
+                                  );
+                                })
+                              }
+                            </Dropdown.Menu>
+                          </Dropdown>
                         );
                       default:
                         return (

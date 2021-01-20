@@ -62,7 +62,7 @@ export default class ImgLoader extends React.Component {
 
     this.xmlHTTP = new window.XMLHttpRequest();
 
-    const src = this.props.proxy && !process ? `${this.props.proxy}/${this.props.src}` : this.props.src;
+    const src = this.props.proxy /* && !process */ ? `${this.props.proxy}/${this.props.src}` : this.props.src;
 
     this.xmlHTTP.open('GET', src, true);
     this.xmlHTTP.responseType = 'arraybuffer';

@@ -166,11 +166,11 @@ class WeatherForecast extends WidgetTemplate {
                   <td className='day'>{f.day}</td>
                   <td className='bright weather-icon'><span className={`wi weathericon ${f.icon}`} /></td>
                   <td className='align-right bright max-temp'>
-                    <span>{f.maxTemp}</span>
+                    <span>{f.maxTemp.toFixed(1)}</span>
                     <span className='degree'>{degreeLabel}</span>
                   </td>
                   <td className='align-right bright min-temp'>
-                    <span>{f.minTemp}</span>
+                    <span>{f.minTemp.toFixed(1)}</span>
                     <span className='degree'>{degreeLabel}</span>
                   </td>
                   <td className='rain'>{f.rain.toFixed(1)} mm</td>

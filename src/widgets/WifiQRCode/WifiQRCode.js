@@ -7,6 +7,38 @@ class WifiQRCode extends WidgetTemplate {
     return 'Wifi QR kód';
   }
 
+  static get configInput () {
+    return [
+      {
+        type: 'text',
+        id: 'ssid',
+        label: 'Název',
+        placeholder: 'Název WiFi sítě'
+      },
+      {
+        type: 'text',
+        id: 'password',
+        label: 'Heslo',
+        placeholder: 'Heslo WiFi sítě'
+      },
+      {
+        type: 'select',
+        id: 'encryption',
+        label: 'Zabezpečení',
+        options: [
+          { label: 'WEP', id: 'WEP' },
+          { label: 'WPA', id: 'WPA' },
+          { label: 'Žádné', id: '' }
+        ]
+      },
+      {
+        type: 'bool',
+        id: 'hidden',
+        label: 'Skrytá'
+      }
+    ];
+  }
+
   toURLEncoded (object) {
     let output = '';
     for (const key in object) {
