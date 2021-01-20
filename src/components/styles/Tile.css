@@ -9,3 +9,12 @@
   justify-content: center;
   align-items: center;
 }
+
+.tile-container .input {
+  margin: 10px;
+  font-size: 1.5rem;
+}
+
+.tile-container .dropdown-button{
+font-size: 3rem;
+}

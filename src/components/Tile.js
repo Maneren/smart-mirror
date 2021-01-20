@@ -55,7 +55,7 @@ class Tile extends Component {
       <div className='tile-container'>
         <div style={{ display: editMode ? 'block' : 'none' }}>
           <Dropdown>
-            <Dropdown.Toggle variant='success' id='choose-widget'>
+            <Dropdown.Toggle className='Dropdown-button' size='lg' variant='success' id='choose-widget'>
               {dropdownLabel}
             </Dropdown.Toggle>
 
@@ -108,7 +108,7 @@ class Tile extends Component {
                         );
                       default:
                         return (
-                          <Form.Group key={index}>
+                          <Form.Group key={index} className='input default'>
                             <Form.Label>{input.label}</Form.Label>
                             <Form.Control onChange={e => this.changeConfig(input.id, e.target.value)} type={input.type} placeholder={input.placeholder} />
                           </Form.Group>
