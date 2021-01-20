@@ -53,6 +53,7 @@ class Reddit extends WidgetTemplate {
   }
 
   isBadImgFormat (src) {
+    if (!src) return true;
     return [/(v\.redd)/, /(gfycat)/, /(\.gif)/, /(imgur)/, /(gallery)/].some(regex => src.search(regex) !== -1);
   }
 
@@ -96,6 +97,7 @@ class Reddit extends WidgetTemplate {
       const author = postData.author;
       const title = postData.title;
 
+      const url = 'https://reddit.com' + postData.permalink;
       const src = postData.url_overridden_by_dest;
 
       const nsfw = postData.over_18;
@@ -107,6 +109,7 @@ class Reddit extends WidgetTemplate {
         subreddit,
         author,
         title,
+        url,
         src,
         nsfw,
         spoiler,
@@ -146,21 +149,23 @@ class Reddit extends WidgetTemplate {
           <div className='line' />
         </div>
         <div className='title'>{activePost.title}</div>
-        <ImgLoader
-          src={activePost.src}
-          className='img'
-          alt='post img'
-          OnLoad={this.imgLoaded.bind(this)}
-          OnError={this.handleImgError.bind(this)}
-          proxy='http://127.0.0.1:3100'
-        />
+        <a href={activePost.url} target='_blank' rel='noopener noreferrer'>
+          <ImgLoader
+            src={activePost.src}
+            className='img'
+            alt='post img'
+            OnLoad={this.imgLoaded.bind(this)}
+            OnError={this.handleImgError.bind(this)}
+            proxy='http://127.0.0.1:3100'
+          />
+        </a>
         <div className='comments-score'>
           <span className='score'>
-            <img src='assets/upvote.svg' alt='upvote icon' />
+            <img src='http://localhost:3000/assets/upvote.svg' alt='upvote icon' />
             <span>{activePost.score}</span>
           </span>
           <span className='comments'>
-            <img src='assets/comments.svg' alt='comments icon' />
+            <img src='http://localhost:3000/assets/comments.svg' alt='comments icon' />
             <span>{activePost.comments}</span>
           </span>
         </div>

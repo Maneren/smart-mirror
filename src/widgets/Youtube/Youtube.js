@@ -1,5 +1,5 @@
 import React from 'react';
-import "./Youtube.css";
+import './Youtube.css';
 import WidgetTemplate from '../template';
 import Loader from '../../components/Loader';
 import Utils from '../../Utils';
@@ -21,6 +21,21 @@ class Youtube extends WidgetTemplate {
     };
   }
 
+  static get menuName () {
+    return 'Youtube';
+  }
+
+  static get configInput () {
+    return [
+      {
+        type: 'text',
+        id: 'URL',
+        label: 'URL',
+        placeholder: 'URL videa'
+      }
+    ];
+  }
+
   get uri () {
     const url = this.config.URL;
     if (!url) return false;
@@ -40,7 +55,7 @@ class Youtube extends WidgetTemplate {
       <div className='youtube-container'>
         {!loaded ? <Loader color='#eee' /> : null}
         <iframe
-          className="yt-video"
+          className='yt-video'
           title='Youtube'
           width='560'
           height='315'

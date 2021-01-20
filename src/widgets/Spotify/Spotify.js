@@ -22,6 +22,21 @@ class Spotify extends WidgetTemplate {
     };
   }
 
+  static get menuName () {
+    return 'Spotify';
+  }
+
+  static get configInput () {
+    return [
+      {
+        type: 'text',
+        id: 'URI',
+        label: 'URI',
+        placeholder: 'URI playlistu nebo alba'
+      }
+    ];
+  }
+
   get uri () {
     const uri = this.config.URI;
     if (!uri) return false;

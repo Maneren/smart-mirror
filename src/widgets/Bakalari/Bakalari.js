@@ -160,6 +160,8 @@ class Bakalari extends WidgetTemplate {
   }
 
   get missingCredentials () {
+    const { credentials } = this.config;
+    if (!credentials) return false;
     const { server, username, password } = this.config.credentials;
     return (!server || server === '') ||
            (!username || username === '') ||

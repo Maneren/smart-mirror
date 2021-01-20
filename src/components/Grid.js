@@ -7,6 +7,7 @@ class Grid extends Component {
   constructor () {
     super();
     this.callbacksForDataToSave = [];
+    this.callbacksForSaveEdits = [];
   }
 
   get numberOfTiles () {
@@ -14,8 +15,16 @@ class Grid extends Component {
     return width * height;
   }
 
-  passCallbacks () {
+  passSaveCallbacks () {
     this.props.setSaveCallback(this.getDataToSave.bind(this));
+  }
+
+  passSaveEditsCallbacks () {
+    this.props.setSaveEditsCallback(this.saveEditsHandle.bind(this));
+  }
+
+  saveEditsHandle () {
+    this.callbacksForSaveEdits.forEach(f => f());
   }
 
   getDataToSave () {
@@ -23,15 +32,25 @@ class Grid extends Component {
   }
 
   render () {
-    const handle = (callback, i) => {
+    const saveDataHandle = (callback, i) => {
       this.callbacksForDataToSave[i] = callback;
 
       const savedCallbacks = this.callbacksForDataToSave.reduce(
         (n, f) => n + (f ? 1 : 0),
         0
       );
-      if (savedCallbacks === this.numberOfTiles) this.passCallbacks();
+      if (savedCallbacks === this.numberOfTiles) this.passSaveCallbacks();
     }; // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
+
+    const saveEditsHandle = (callback, i) => {
+      this.callbacksForSaveEdits[i] = callback;
+
+      const savedCallbacks = this.callbacksForSaveEdits.reduce(
+        (n, f) => n + (f ? 1 : 0),
+        0
+      );
+      if (savedCallbacks === this.numberOfTiles) this.passSaveEditsCallbacks();
+    };
 
     const { width, height, widgets, configs } = this.props.options;
     return (
@@ -46,8 +65,9 @@ class Grid extends Component {
           <Tile
             key={i}
             index={i}
-            setSaveCallback={handle}
+            setSaveCallback={saveDataHandle}
             editMode={this.props.editMode}
+            setSaveEditCallback={saveEditsHandle}
             availableWidgets={this.props.availableWidgets}
             widget={widgets[i]}
             config={configs[i]}

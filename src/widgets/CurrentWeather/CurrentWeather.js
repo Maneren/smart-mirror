@@ -1,11 +1,13 @@
 import React from 'react';
 
+import request from 'request-promise-native';
+
 import WidgetTemplate from '../template.js';
 
 import './CurrentWeather.css';
 import './assets/css/weather-icons.css';
 
-import json from './test.json';
+// import json from './test.json';
 
 import Loader from '../../components/Loader';
 
@@ -14,7 +16,7 @@ class CurrentWeather extends WidgetTemplate {
     super(props);
     this.defaults = {
       url: 'https://api.openweathermap.org/data/2.5/weather',
-      apiKey: '', // cf75b04dc7e8f66b135a9f521a54affb
+      apiKey: '',
       location: 'Pilsen,Czechia',
       degreeLabel: '℃'
     };
@@ -54,6 +56,21 @@ class CurrentWeather extends WidgetTemplate {
     };
   }
 
+  static get menuName () {
+    return 'Aktuální počasí';
+  }
+
+  static get configInput () {
+    return [
+      {
+        type: 'text',
+        id: 'location',
+        label: 'Místo',
+        placeholder: ''
+      }
+    ];
+  }
+
   getDataToSave () {
     return { type: this.constructor.name, config: { ...this.state.config, apiKey: 'OpenWeather' } };
   }
@@ -61,33 +78,30 @@ class CurrentWeather extends WidgetTemplate {
   componentDidMount () {
     super.componentDidMount();
     this.updateState();
-    this.internalClock = setInterval(this.updateState.bind(this), 120000);
+    this.internalClock = setInterval(this.updateState.bind(this), 1200000);
   }
 
   updateState () {
-    const { apiKey } = this.config;
+    const { apiKey, url, location } = this.config;
     if (!apiKey || apiKey === '') return;
 
-    const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
-    sleep(Math.random() * 2000 + 500).then(() => {
-      const data = this.processWeatherData(json);
-      console.log('UPDATE');
-      this.setState({ weather: data, loaded: true });
-    });
+    // const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
+    // sleep(Math.random() * 2000 + 500).then(() => {
+    //   const data = this.processWeatherData(json);
+    //   console.log('UPDATE');
+    //   this.setState({ weather: data, loaded: true });
+    // });
 
-    // const [url, location] = this.getConfigs('url', 'apiKey', 'location');
-    // console.log(url, apiKey, location);
-    // const query = `${url}?appid=${apiKey}&q=${location}&units=metric`;
+    const query = `${url}?appid=${apiKey}&q=${location}&units=metric`;
 
-    // const request = require('request-promise-native');
-    // request(query).then(
-    //   response => {
-    //     const json = JSON.parse(response);
-    //     console.log(response);
-    //     const data = this.processWeatherData(json);
-    //     this.setState({ forecasts: data, loaded: true });
-    //   }
-    // );
+    request(query).then(
+      response => {
+        const json = JSON.parse(response);
+        const data = this.processWeatherData(json);
+        console.log('UPDATE');
+        this.setState({ weather: data, loaded: true });
+      }
+    );
   }
 
   processWeatherData (data) {
@@ -203,7 +217,5 @@ class CurrentWeather extends WidgetTemplate {
     return this.state.loaded ? loaded : loading;
   }
 }
-
-CurrentWeather.menuName = 'Týdenní předpověď';
 
 export default CurrentWeather;

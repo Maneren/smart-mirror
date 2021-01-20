@@ -2,50 +2,123 @@ import React, { Component } from 'react';
 import './styles/Tile.css';
 
 import Dropdown from 'react-bootstrap/Dropdown';
+import { Form } from 'react-bootstrap';
 
 class Tile extends Component {
   constructor (props) {
     super(props);
     this.state = {
-      widget: props.widget
+      widget: props.widget,
+      config: props.config,
+      choice: {
+        widget: props.widget,
+        config: props.config
+      }
     };
   }
 
   chooseWidget (widget) {
-    this.setState({ widget: widget });
+    const { config } = this.state.choice;
+    this.setState({ choice: { widget, config } });
+  }
+
+  changeConfig (key, val) {
+    const { widget, config } = this.state.choice;
+    config[key] = val;
+    this.setState({ choice: { widget, config } });
+  }
+
+  componentDidMount () {
+    this.props.setSaveEditCallback(this.saveChoice.bind(this), this.props.index);
+  }
+
+  saveChoice () {
+    const { widget, config } = this.state.choice;
+    this.setState({
+      widget,
+      config
+    });
   }
 
   render () {
-    const editMode = this.props.editMode;
+    const handle = function (callback) {
+      this.props.setSaveCallback(callback, this.props.index);
+    }.bind(this);
 
-    if (editMode) {
-      return (
-        <div className='tile-container'>
+    const { editMode } = this.props;
+    const Widget = this.state.widget; // component name must be capitalized
+    const { choice } = this.state;
+    let dropdownLabel = 'Choose widget';
+    if (choice.widget) dropdownLabel = choice.widget.menuName;
+
+    const { configInput } = choice.widget;
+
+    return (
+      <div className='tile-container'>
+        <div style={{ display: editMode ? 'block' : 'none' }}>
           <Dropdown>
             <Dropdown.Toggle variant='success' id='choose-widget'>
-              {this.state.widget ? this.state.widget.displayName : 'Choose widget'}
+              {dropdownLabel}
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-              {this.props.availableWidgets.map((widget, index) => (<Dropdown.Item onClick={() => this.chooseWidget(widget)} key={index}>{widget.displayName}</Dropdown.Item>))}
+              {
+                Object.entries(this.props.availableWidgets).map(
+                  ([key, widget], index) => {
+                    if (!widget.menuName) return null;
+                    return (
+                      <Dropdown.Item onClick={() => this.chooseWidget(widget)} key={index}>
+                        {widget.menuName}
+                      </Dropdown.Item>
+                    );
+                  }
+                )
+              }
             </Dropdown.Menu>
           </Dropdown>
+          {
+            configInput
+              ? <Form>
+                {
+                  configInput.map((input, index) => {
+                    switch (input.type) {
+                      case 'bool':
+                        return (
+                          <Form.Group key={index}>
+                            <Form.Label>{input.label}</Form.Label>
+                            <Form.Control as='select' multiple>
+                              <option onClick={() => this.changeConfig(input.id, true)}>Ano</option>
+                              <option onClick={() => this.changeConfig(input.id, false)} value='false'>Ne</option>
+                            </Form.Control>
+                          </Form.Group>
+                        );
+                      case 'select':
+                        return (
+                          <Form.Group key={index}>
+                            <Form.Label>{input.label}</Form.Label>
+                            <Form.Control as='select' multiple>
+                              {input.options.map(option => <option onClick={() => this.changeConfig(input.id, option.id)} key={option.id}>{option.label}</option>)}
+                            </Form.Control>
+                          </Form.Group>
+                        );
+                      default:
+                        return (
+                          <Form.Group key={index}>
+                            <Form.Label>{input.label}</Form.Label>
+                            <Form.Control onChange={e => this.changeConfig(input.id, e.target.value)} type={input.type} placeholder={input.placeholder} />
+                          </Form.Group>
+                        );
+                    }
+                  })
+              } </Form>
+              : null
+            }
         </div>
-      );
-    } else {
-      const Widget = this.props.widget;
-
-      if (!Widget) return null;
-
-      const handle = function (callback) {
-        this.props.setSaveCallback(callback, this.props.index);
-      }.bind(this);
-      return (
-        <div className='tile-container'>
+        <div style={{ display: editMode ? 'none' : 'block' }}>
           <Widget setSaveCallback={handle} config={this.props.config} />
         </div>
-      );
-    }
+      </div>
+    );
   }
 }
 

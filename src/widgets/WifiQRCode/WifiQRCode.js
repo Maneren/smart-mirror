@@ -1,8 +1,12 @@
 import React from 'react';
-import "./WifiQRCode.css";
+import './WifiQRCode.css';
 import WidgetTemplate from '../template.js';
 
 class WifiQRCode extends WidgetTemplate {
+  static get menuName () {
+    return 'Wifi QR kód';
+  }
+
   toURLEncoded (object) {
     let output = '';
     for (const key in object) {
@@ -22,17 +26,13 @@ class WifiQRCode extends WidgetTemplate {
           choe: 'UTF-8',
           chld: 'L|2'
         }
-      )
-    ;
-    return ( 
-    <div className='qr-code-container'>
-
-    <span className='WifiText'> QR code for {ssid}</span>
-    <br/>
-    <img className='QrWifi' src={url} alt='wifi qr code' />
-    
-    </div>
-    
+      );
+    return (
+      <div className='qr-code-container'>
+        <span className='WifiText'> QR code for {ssid}</span>
+        <br />
+        <img className='QrWifi' src={url} alt='wifi qr code' />
+      </div>
     );
   }
 }

@@ -17,9 +17,13 @@ class App extends Component {
       availableWidgets: widgetsDB,
       editMode: false,
       pages: undefined,
-      activePage: 0
+      activePage: 0,
+      saveEdit: false,
+      sleeping: false,
+      pagesLocked: false
     };
     this.handlesForDataToSave = [];
+    this.handlesSaveEdits = [];
   }
 
   componentDidMount () {
@@ -52,18 +56,81 @@ class App extends Component {
         this.setState({ pages, apiKeys, credentials });
       }
     );
+
+    this.initGestureSensor();
+  }
+
+  async initGestureSensor () {
+    // get sensor events
+    const { spawn } = await window.require('child_process');
+
+    this.exe = spawn('node', ['-i', './src/gestureSensor/print.js']/* , { shell: true, detached: true } */);
+    this.exe.stdout.on('data', data => this.handleSensorInput(data));
+    this.exe.stderr.on('data', data => console.log(`stderr: ${data}`));
+    this.exe.on('close', exitCode => console.error('Sensor listener exited: ' + exitCode));
+    console.log(this.exe);
+  }
+
+  handleSensorInput (input) {
+    const command = input.toString().substr(0, input.length - 1);
+    console.log(command);
+
+    const { sleeping, pagesLocked } = this.state;
+
+    if (sleeping) {
+      if (command === 'Up') this.setState({ sleeping: false });
+    } else {
+      if (!pagesLocked) {
+        switch (command) {
+          case 'Up':
+            this.setState({ pagesLocked: true });
+            break;
+          case 'Down':
+            this.setState({ sleeping: true });
+            break;
+          case 'Left':
+            this.previousPage();
+            break;
+          case 'Right':
+            this.nextPage();
+            break;
+          default:
+            break;
+        }
+      } else {
+        switch (command) {
+          case 'Up':
+            break;
+          case 'Down':
+            this.setState({ pagesLocked: false });
+            break;
+          case 'Left':
+            this.previousPage();
+            break;
+          case 'Right':
+            this.nextPage();
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  componentWillUnmount () {
+    this.exe.close();
   }
 
   async loadConfig () {
-    // const fs = await window.require('fs');
+    /* const fs = await window.require('fs');
 
-    // return await new Promise((resolve, reject) => {
-    //   // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-    //   fs.readFile('.src/config/config.json', 'utf8', (err, data) => {
-    //     if (err) reject(err);
-    //     resolve(JSON.parse(data));
-    //   });
-    // });
+    return await new Promise((resolve, reject) => {
+      // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+      fs.readFile('./public/config.json', 'utf8', (err, data) => {
+        if (err) reject(err);
+        resolve(JSON.parse(data));
+      });
+    }); */
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
     await sleep(Math.random() * 1000 + 1000);
     return data;
@@ -75,19 +142,21 @@ class App extends Component {
     console.log(data);
     console.log(JSON.stringify(data, null, 2));
 
-    // const fs = await window.require('fs');
-    // return await new Promise((resolve, reject) => {
-    //   // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-    //   fs.writeFile('.src/config/config.json', JSON.stringify(data), (err, data) => {
-    //     if (err !== null) reject(err);
-    //     resolve(JSON.parse(data));
-    //   });
-    // });
+    /* const fs = await window.require('fs');
+
+    return await new Promise((resolve, reject) => {
+      // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
+      fs.writeFile('.src/config/config.json', JSON.stringify(data), (err, data) => {
+        if (err !== null) reject(err);
+        resolve(JSON.parse(data));
+      });
+    }); */
   }
 
   get dataToSave () {
     const { apiKeys, credentials } = this.state;
-    return { credentials, apiKeys, pages: this.handlesForDataToSave.map(f => f()) };
+    const pages = this.handlesForDataToSave.map(f => f ? f() : {});
+    return { credentials, apiKeys, pages };
   }
 
   nextPage () {
@@ -100,28 +169,49 @@ class App extends Component {
     this.setState({ activePage: (activePage - 1 + pages.length) % pages.length });
   }
 
+  toggleEditMode () {
+    const { editMode } = this.state;
+    if (editMode) {
+      const confirm = window.confirm('Pokračovat bez uložení?');
+      if (!confirm) return;
+    }
+    this.setState({ editMode: !editMode });
+  }
+
+  saveEdit () {
+    this.handlesSaveEdits.forEach(f => f());
+    this.setState({ editMode: false });
+  }
+
   render () {
     if (this.state.pages === undefined) {
       return (<div className='App App-loading'><Loader color='#eee' /></div>);
     }
-    this.handlesForDataToSave = [];
-
+    const { pages, editMode, availableWidgets, activePage, saveEdit } = this.state;
     return (
       <div className='App'>
-        <Pagination activePage={this.state.activePage}>
-          {this.state.pages.map((page, i) => (
-            <Grid
-              key={i}
-              setSaveCallback={callback => { this.handlesForDataToSave.push(callback); }} // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
-              options={page}
-              editMode={this.state.editMode}
-              availableWidgets={this.state.availableWidgets}
-            />
-          ))}
+        <Pagination activePage={activePage}>
+          {
+            pages.map((page, i) => (
+              <Grid
+                key={i}
+                setSaveCallback={callback => { this.handlesForDataToSave.push(callback); }} // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
+                setSaveEditsCallback={callback => {
+                  this.handlesSaveEdits.push(callback);
+                }}
+                options={page}
+                editMode={editMode}
+                saveEdit={saveEdit}
+                availableWidgets={availableWidgets}
+              />
+            ))
+          }
         </Pagination>
-        <Button className='test' onClick={this.previousPage.bind(this)}>Prev</Button>
-        <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST</Button>
-        <Button className='test' onClick={this.nextPage.bind(this)}>Next</Button>
+        <Button className='test' onClick={() => this.handleSensorInput('Left\n')}>Prev</Button>
+        <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST save</Button>
+        <Button className='test' onClick={this.toggleEditMode.bind(this)}>Edit</Button>
+        <Button className='test' onClick={this.saveEdit.bind(this)}>Save Edit</Button>
+        <Button className='test' onClick={() => this.handleSensorInput('Right\n')}>Next</Button>
       </div>
     );
   }

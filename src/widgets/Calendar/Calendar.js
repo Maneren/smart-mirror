@@ -30,6 +30,14 @@ class Calendar extends WidgetTemplate {
     };
   }
 
+  static get menuName () {
+    return 'Kalendář';
+  }
+
+  static get configInput () {
+    return [];
+  }
+
   getDataToSave () {
     return { type: this.constructor.name, config: { ...this.state.config, credentials: 'Calendar' } };
   }
@@ -163,7 +171,5 @@ class Calendar extends WidgetTemplate {
     );
   }
 }
-
-Calendar.menuName = 'Kalendář';
 
 export default Calendar;

@@ -82,7 +82,8 @@ class General {
 }
 class Network {
   static requestWithProxy (url, options) {
-    return request(`http://127.0.0.1:3100/${url}`, options);
+    if (process) return request(`${url}`, { origin: 'smart-mirror', ...options });
+    return request(`http://127.0.0.1:3100/${url}`, { origin: 'smart-mirror', ...options });
   }
 
   static decodeURL (url) {

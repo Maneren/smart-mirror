@@ -8,7 +8,7 @@ class Time extends WidgetTemplate {
   constructor (props) {
     super(props);
     this.defaults = {
-      hideSeconds: false
+      showSeconds: false
     };
     this.state = {
       config: props.config,
@@ -21,14 +21,25 @@ class Time extends WidgetTemplate {
     };
   }
 
-  getConfig (key) {
-    if (this.state.config[key] !== undefined) return this.state.config[key];
-    else if (this.defaults[key] !== undefined) return this.defaults[key];
-    else throw new Error('unknown key');
+  static get menuName () {
+    return 'Čas';
   }
 
-  getConfigs (...keys) {
-    return keys.map(key => this.getConfig(key));
+  static get configInput () {
+    return [
+      {
+        type: 'bool',
+        id: 'showSeconds',
+        label: 'Ukazovat sekundy'
+      }
+    ];
+  }
+
+  get config () {
+    return {
+      ...this.defaults,
+      ...this.state.config
+    };
   }
 
   componentDidMount () {
@@ -62,7 +73,7 @@ class Time extends WidgetTemplate {
     return (
       <div className='time-container'>
         <p className='time large'>
-          {time.hours}:{time.minutes}{this.getConfig('hideSeconds') ? '' : <sup>{time.seconds}</sup>}
+          {time.hours}:{time.minutes}{this.config.showSeconds ? <sup>{time.seconds}</sup> : ''}
         </p>
         <p className='date medium'>
           {this.state.date}
@@ -71,7 +82,5 @@ class Time extends WidgetTemplate {
     );
   }
 }
-
-Time.menuName = 'Hodiny';
 
 export default Time;
