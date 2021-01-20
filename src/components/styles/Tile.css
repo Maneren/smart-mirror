@@ -12,4 +12,9 @@
 
 .tile-container .input {
   margin: 10px;
+  font-size: 1.5rem;
+}
+
+.tile-container .dropdown-button{
+
 }
