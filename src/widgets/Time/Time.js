@@ -8,7 +8,7 @@ class Time extends WidgetTemplate {
   constructor (props) {
     super(props);
     this.defaults = {
-      showSeconds: false
+      showSeconds: true
     };
     this.state = {
       config: props.config,
@@ -50,15 +50,18 @@ class Time extends WidgetTemplate {
 
   updateState () {
     const now = new Date();
-    const time = now.toLocaleTimeString('en-US', { hour12: false }).split(':');
+
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const seconds = now.getSeconds();
 
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
 
     this.setState({
       time: {
-        seconds: time[2],
-        minutes: time[1],
-        hours: time[0]
+        seconds,
+        minutes,
+        hours
       },
       date: now.toLocaleDateString('cs-CZ', dateOptions).replace(/(\. )/g, '.')
     });
@@ -69,17 +72,39 @@ class Time extends WidgetTemplate {
   }
 
   render () {
-    const time = this.state.time;
-    return (
-      <div className='time-container'>
-        <p className='time large'>
-          {time.hours}:{time.minutes}{this.config.showSeconds ? <sup>{time.seconds}</sup> : ''}
-        </p>
-        <p className='date medium'>
-          {this.state.date}
-        </p>
-      </div>
-    );
+    const { hours, minutes, seconds } = this.state.time;
+    const { type, showSeconds } = this.config;
+    if (type === 'digital') {
+      return (
+        <div className='time-container'>
+          <p className='time large'>
+            {hours}:{minutes}{showSeconds ? <sup>{seconds}</sup> : ''}
+          </p>
+          <p className='date medium'>
+            {this.state.date}
+          </p>
+        </div>
+      );
+    } else {
+      const degS = ((seconds + minutes * 60 + hours * 3600) / 60) * 360;
+      const degM = ((minutes + hours * 60) / 60) * 360;
+      const degH = ((minutes / 60 + hours) / 12) * 360;
+
+      const rotate = deg => { return { transform: `rotate(${deg}deg)` }; };
+
+      return (
+        <div className='time-container'>
+          <div className='analog-clock'>
+            <div className='hand hour' style={rotate(degH)} />
+            <div className='hand minute' style={rotate(degM)} />
+            {showSeconds ? <div className='hand second' style={rotate(degS)} /> : null}
+          </div>
+          <p className='date medium analog'>
+            {this.state.date}
+          </p>
+        </div>
+      );
+    }
   }
 }
 

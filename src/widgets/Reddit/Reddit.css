@@ -7,7 +7,7 @@
 .reddit-container img {
   max-height: 400px;
   max-width: 400px;
-  filter: grayscale(100%);
+  filter: grayscale(50%);
 }
 
 .reddit-container .title {

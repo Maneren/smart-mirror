@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Utils from '../Utils';
 import './styles/Grid.css';
 
 import Tile from './Tile.js';
@@ -53,6 +54,7 @@ class Grid extends Component {
     };
 
     const { width, height, widgets, configs } = this.props.options;
+    const { range, mapRng } = Utils.General;
     return (
       <div
         className='grid-container'
@@ -61,7 +63,7 @@ class Grid extends Component {
           gridTemplateRows: `repeat(${height}, 1fr)`
         }}
       >
-        {[...Array(this.numberOfTiles)].map((e, i) =>
+        {mapRng(range(this.numberOfTiles), (e, i) =>
           <Tile
             key={i}
             index={i}

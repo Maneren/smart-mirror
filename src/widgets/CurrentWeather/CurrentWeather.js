@@ -7,8 +7,6 @@ import WidgetTemplate from '../template.js';
 import './CurrentWeather.css';
 import './assets/css/weather-icons.css';
 
-// import json from './test.json';
-
 import Loader from '../../components/Loader';
 
 class CurrentWeather extends WidgetTemplate {

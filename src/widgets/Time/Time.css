@@ -2,15 +2,70 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* justify-content: center; */
+  justify-content: center;
+  width: 500px;
+  height: 500px;
 }
 
 .time-container .date {
   font-size: 30px;
 }
 
+.time-container .date.analog {
+  font-size: 30px;
+  margin-top: 20px;
+}
+
 .time-container .time sup {
   top: -0.47em;
   font-size: 60%;
   margin-left: 8px;
+}
+
+.time-container .analog-clock {
+  text-align: center;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-sizing: border-box;
+}
+
+.time-container .hand {
+  background-color: white;
+
+  transition: transform 0.3s ease;
+  transform-origin: 50% 98%;
+
+  position: relative;
+}
+
+.time-container .hour {
+  height: 50px;
+  width: 6px;
+  margin-left: -3px;
+  border-radius: 3px;
+
+  top: 75px;
+  left: 7.4rem;
+}
+
+.time-container .minute {
+  height: 80px;
+  width: 4px;
+  margin-left: -2px;
+  border-radius: 2px;
+
+  top: -5px;
+  left: 7.4rem;
+}
+
+.time-container .second {
+  height: 110px;
+  width: 2px;
+  margin-left: -1px;
+  border-radius: 1px;
+
+  top: -115px;
+  left: 7.4rem;
 }

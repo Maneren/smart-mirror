@@ -2,7 +2,7 @@
 
 .App {
   text-align: center;
-  width: 100vw;
+  width: 1080px;
   height: 100vh;
   overflow-x: hidden;
   background-color: black;
@@ -48,21 +48,21 @@ header {
 }
 
 .App-loading .logo {
-  stroke-dasharray: 1000;
-  stroke-dashoffset: 1000;
-  animation: draw 2s linear forwards;
-  -webkit-animation: draw 2s linear forwards;
-  -moz-animation: draw 2s linear forwards;
-  -o-animation: draw 2s linear forwards;
-  font-weight: bold;
-  font-family: "OpenSans";
-
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 
   transform: scale(1.5);
+}
+
+.App-loading .logo path {
+  animation: draw 2s linear forwards;
+  -webkit-animation: draw 2s linear forwards;
+  -moz-animation: draw 2s linear forwards;
+  -o-animation: draw 2s linear forwards;
+  font-weight: bold;
+  font-family: "OpenSans";
 }
 
 .App-loading .logo svg {

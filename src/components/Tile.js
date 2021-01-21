@@ -88,7 +88,7 @@ class Tile extends Component {
                         );
                       case 'select':
                         return (
-                          <Dropdown>
+                          <Dropdown key={index}>
                             <Dropdown.Toggle variant='primary' id='choose-widget'>
                               {choice.config[input.id] ? choice.config[input.id] : input.label}
                             </Dropdown.Toggle>
