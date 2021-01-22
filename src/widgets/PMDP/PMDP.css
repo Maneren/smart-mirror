@@ -1,0 +1,28 @@
+.pmdp-container .line{
+height: 40px;
+}
+.pmdp-container .line-type{
+background-color: white;
+height: 20px;
+width: 30px;
+mask-repeat: no-repeat;
+display: block;
+margin: 0px;
+}
+.pmdp-container .line-type.walk {
+
+mask-image: url("http://localhost:3000/assets/walk.svg");
+
+}
+
+.pmdp-container .line-type.bus {
+mask-image: url("http://localhost:3000/assets/bus.svg");
+}
+
+.pmdp-container .line-type.tram {
+mask-image: url("http://localhost:3000/assets/tram2.svg");
+}
+
+.pmdp-container .line-type.trolley {
+mask-image: url("http://localhost:3000/assets/trolley.svg");
+}
