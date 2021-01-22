@@ -57,7 +57,7 @@ async function fetchConnectionsFromPMDP (from, to, datetime, limit) {
     MaxTransfers: 3,
     MaxTransferTimeMin: 30,
     ResultsStartIndex: 0,
-    ResultsEndIndex: limit - 1,
+    ResultsEndIndex: limit,
     FullResults: true
   });
 
@@ -82,7 +82,7 @@ async function fetchConnectionsFromPMDP (from, to, datetime, limit) {
     const duration = connection.DurationMin;
     const departsIn = connection.LeavingInMin;
 
-    const segments = connection.Segments.map(segment => {
+    const segments = connection.Segments.filter(segment => segment.Line.TractionType !== 0).map(segment => {
       const from = {
         name: segment.From.Name,
         datetime: new Date(segment.From.DepartureTime)
@@ -112,7 +112,7 @@ async function fetchConnectionsFromPMDP (from, to, datetime, limit) {
     const start = segments[0].from.datetime;
     const end = segments[segments.length - 1].to.datetime;
     return { from, to, duration, segments, departsIn, start, end };
-  });
+  }).slice(0, limit);
   return parsed;
 }
 

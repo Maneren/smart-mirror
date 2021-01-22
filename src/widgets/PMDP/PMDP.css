@@ -2,11 +2,17 @@
   width: 450px;
 }
 
+.pmdp-container .connection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .pmdp-container .segment {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 5px;
+  margin-bottom: 5px;
 }
 
 .pmdp-container .from-to {
@@ -34,6 +40,10 @@
   margin-right: 25px;
 }
 
+.pmdp-container .line.walk {
+  font-size: 1.5rem;
+}
+
 .pmdp-container .line-icon-wrapper {
   width: 40px;
   margin-right: 10px;
@@ -42,4 +52,8 @@
 .pmdp-container .line-icon {
   height: 2.5rem;
   margin: 0;
+}
+
+.pmdp-container .line.walk .line-icon {
+  height: 1.5rem;
 }
