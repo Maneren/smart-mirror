@@ -1,7 +1,7 @@
 import React from 'react';
 import Loader from '../../components/Loader.js';
 import WidgetTemplate from '../template.js';
-
+import './PMDP.css';
 import fetchConnectionsFromPMDP from './api.js';
 
 class PMDP extends WidgetTemplate {
@@ -103,7 +103,10 @@ class PMDP extends WidgetTemplate {
                   {connection.segments.map(
                     (segment, index) => (
                       <div className='segment' key={index}>
-                        <div className='line'>{segment.line.type} {segment.line.number}</div>
+                        <div className='line'>
+                          <span className={"line-type " + segment.line.type}/>
+                          <span>{segment.line.number}</span>
+                        </div>
                         <div className='from'>{segment.from.name} {toHoursAndMinutes(segment.from.datetime)}</div>
                         <div className='to'>{segment.to.name} {toHoursAndMinutes(segment.to.datetime)}</div>
                       </div>
