@@ -23,6 +23,6 @@ mask-image: url("http://localhost:3000/assets/bus.svg");
 mask-image: url("http://localhost:3000/assets/tram2.svg");
 }
 
-.pmdp-container .line-type.trolley {
-mask-image: url("http://localhost:3000/assets/trolley.svg");
+.pmdp-container .line-type.trolleybus{
+mask-image: url("http://localhost:3000/assets/trolley3.svg");
 }
