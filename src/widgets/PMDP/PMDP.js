@@ -93,19 +93,27 @@ class PMDP extends WidgetTemplate {
               return (
                 <div key={index} className='connection'>
                   <div className='connection-header'>
-                    <span className='duration'>{connection.duration} minut</span>
-                    <span className='departsIn'>{connection.departsIn}</span>
+                    <span className='departsIn'>za {connection.departsIn} min</span>
+                    <span className='duration'>{connection.duration} min</span>
                   </div>
                   {connection.segments.map(
                     (segment, index) => (
                       <div className='segment' key={index}>
                         <div className='line'>
-                          <div className={`line-type ${segment.line.type}`} />
+                          <div className='line-icon-wrapper'>
+                            <img src={`http://localhost:3000/assets/pmdp/${segment.line.type}.png`} alt='line type icon' className='line-icon' />
+                          </div>
                           <div>{segment.line.number}</div>
                         </div>
                         <div className='from-to'>
-                          <div className='from'>{segment.from.name} {formatTime(segment.from.datetime)}</div>
-                          <div className='to'>{segment.to.name} {formatTime(segment.to.datetime)}</div>
+                          <div className='from'>
+                            <span className='name'>{segment.from.name}</span>
+                            <span className='time'>{formatTime(segment.from.datetime)}</span>
+                          </div>
+                          <div className='to'>
+                            <span className='name'>{segment.to.name}</span>
+                            <span className='time'>{formatTime(segment.to.datetime)}</span>
+                          </div>
                         </div>
                       </div>
                     )

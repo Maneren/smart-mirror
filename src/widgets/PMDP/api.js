@@ -80,7 +80,7 @@ async function fetchConnectionsFromPMDP (from, to, datetime, limit) {
     const from = connection.StartName;
     const to = connection.DestinationName;
     const duration = connection.DurationMin;
-    const departsIn = connection.LeavinginMin;
+    const departsIn = connection.LeavingInMin;
 
     const segments = connection.Segments.map(segment => {
       const from = {
