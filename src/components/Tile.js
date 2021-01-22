@@ -120,7 +120,7 @@ class Tile extends Component {
             }
         </div>
         <div style={{ display: editMode ? 'none' : 'block' }}>
-          <Widget setSaveCallback={handle} config={this.props.config} />
+          <Widget setSaveCallback={handle} config={this.state.config} />
         </div>
       </div>
     );

@@ -17,7 +17,8 @@ class Grid extends Component {
   }
 
   passSaveCallbacks () {
-    this.props.setSaveCallback(this.getDataToSave.bind(this));
+    const { setSaveCallback, index } = this.props;
+    setSaveCallback(this.getDataToSave.bind(this), index);
   }
 
   passSaveEditsCallbacks () {

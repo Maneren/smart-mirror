@@ -181,9 +181,10 @@ class App extends Component {
   saveEdit () {
     this.handlesSaveEdits.forEach(f => f());
     this.setState({ editMode: false });
-
-    const data = this.dataToSave;
-    console.log(data);
+    setTimeout(() => {
+      const data = this.dataToSave;
+      console.log(data);
+    }, 500);
   }
 
   render () {
@@ -248,7 +249,8 @@ class App extends Component {
             pages.map((page, i) => (
               <Grid
                 key={i}
-                setSaveCallback={callback => { this.handlesForDataToSave.push(callback); }} // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
+                index={i}
+                setSaveCallback={(callback, i) => { this.handlesForDataToSave[i] = callback; }} // https://stackoverflow.com/questions/37949981/call-child-method-from-parent
                 setSaveEditsCallback={callback => {
                   this.handlesSaveEdits.push(callback);
                 }}

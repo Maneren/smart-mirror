@@ -57,10 +57,7 @@ header {
 }
 
 .App-loading .logo path {
-  animation: draw 2s linear forwards;
-  -webkit-animation: draw 2s linear forwards;
-  -moz-animation: draw 2s linear forwards;
-  -o-animation: draw 2s linear forwards;
+  animation: draw 1.5s linear forwards;
   font-weight: bold;
   font-family: "OpenSans";
 }

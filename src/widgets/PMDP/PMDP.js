@@ -8,7 +8,7 @@ class PMDP extends WidgetTemplate {
   constructor (props) {
     super(props);
     this.defaults = {
-      limit: 5
+      limit: 3
     };
     this.state = {
       config: props.config,
@@ -41,16 +41,6 @@ class PMDP extends WidgetTemplate {
         id: 'to',
         label: 'Kam',
         placeholder: ''
-      },
-      {
-        type: 'date',
-        id: 'date',
-        label: 'Datum'
-      },
-      {
-        type: 'time',
-        id: 'time',
-        label: 'Čas'
       }
     ];
   }
@@ -62,15 +52,21 @@ class PMDP extends WidgetTemplate {
   componentDidMount () {
     super.componentDidMount();
     this.updateState();
-    this.internalClock = setInterval(this.updateState.bind(this), 60000);
+    // this.internalClock = setInterval(this.updateState.bind(this), 60000);
   }
 
   updateState () {
     const { from, to, limit } = this.config;
     for (const value of [from, to, limit]) { if (!value || value === '') return; }
-    const datetime = new Date('2021-01-22T12:00:00'/* Date.now() */);
+    const datetime = new Date(/* '2021-01-25T12:00:00' */Date.now());
     fetchConnectionsFromPMDP(from, to, datetime, limit)
-      .then(data => this.setState({ connections: data, loaded: true }));
+      .then(data => {
+        if (data.length > 0) {
+          const timeout = data[0].start - Date.now();
+          this.internalClock = setTimeout(() => this.updateState(), timeout);
+        }
+        this.setState({ connections: data, loaded: true });
+      });
   }
 
   componentWillUnmount () {
@@ -85,7 +81,7 @@ class PMDP extends WidgetTemplate {
 
     const { connections, loaded } = this.state;
 
-    const toHoursAndMinutes = datetime => `${datetime.getHours()}:${datetime.getMinutes()}`;
+    const formatTime = datetime => datetime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     if (!loaded) return <div className='pmdp-container'><Loader color='#eee' /></div>;
     return (
@@ -104,8 +100,8 @@ class PMDP extends WidgetTemplate {
                     (segment, index) => (
                       <div className='segment' key={index}>
                         <div className='line'>{segment.line.type} {segment.line.number}</div>
-                        <div className='from'>{segment.from.name} {toHoursAndMinutes(segment.from.datetime)}</div>
-                        <div className='to'>{segment.to.name} {toHoursAndMinutes(segment.to.datetime)}</div>
+                        <div className='from'>{segment.from.name} {formatTime(segment.from.datetime)}</div>
+                        <div className='to'>{segment.to.name} {formatTime(segment.to.datetime)}</div>
                       </div>
                     )
                   )}

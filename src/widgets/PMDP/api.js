@@ -109,8 +109,9 @@ async function fetchConnectionsFromPMDP (from, to, datetime, limit) {
 
       return { from, to, line, delay, distance };
     });
-
-    return { from, to, duration, segments, departsIn };
+    const start = segments[0].from.datetime;
+    const end = segments[segments.length - 1].to.datetime;
+    return { from, to, duration, segments, departsIn, start, end };
   });
   return parsed;
 }
