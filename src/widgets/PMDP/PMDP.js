@@ -100,11 +100,13 @@ class PMDP extends WidgetTemplate {
                     (segment, index) => (
                       <div className='segment' key={index}>
                         <div className='line'>
-                          <span className={`line-type ${segment.line.type}`} />
-                          <span>{segment.line.number}</span>
+                          <div className={`line-type ${segment.line.type}`} />
+                          <div>{segment.line.number}</div>
                         </div>
-                        <div className='from'>{segment.from.name} {formatTime(segment.from.datetime)}</div>
-                        <div className='to'>{segment.to.name} {formatTime(segment.to.datetime)}</div>
+                        <div className='from-to'>
+                          <div className='from'>{segment.from.name} {formatTime(segment.from.datetime)}</div>
+                          <div className='to'>{segment.to.name} {formatTime(segment.to.datetime)}</div>
+                        </div>
                       </div>
                     )
                   )}

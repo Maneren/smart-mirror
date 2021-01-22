@@ -1,28 +1,40 @@
-.pmdp-container .line{
-height: 40px;
+.connections {
+  width: 400px;
 }
-.pmdp-container .line-type{
-background-color: white;
-height: 20px;
-width: 30px;
-mask-repeat: no-repeat;
-display: block;
-margin: 0px;
+
+.pmdp-container .segment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pmdp-container .line {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+
+  font-size: 2.5rem;
+  margin-right: 10px;
+}
+.pmdp-container .line-type {
+  background-color: white;
+  height: 2.5rem;
+  width: 50px;
+  mask-repeat: no-repeat;
+  margin: 0;
 }
 .pmdp-container .line-type.walk {
-
-mask-image: url("http://localhost:3000/assets/walk.svg");
-
+  mask-image: url("http://localhost:3000/assets/walk.svg");
 }
 
 .pmdp-container .line-type.bus {
-mask-image: url("http://localhost:3000/assets/bus.svg");
+  mask-image: url("http://localhost:3000/assets/bus.svg");
 }
 
 .pmdp-container .line-type.tram {
-mask-image: url("http://localhost:3000/assets/tram2.svg");
+  mask-image: url("http://localhost:3000/assets/tram2.svg");
 }
 
-.pmdp-container .line-type.trolley {
-mask-image: url("http://localhost:3000/assets/trolley.svg");
+.pmdp-container .line-type.trolleybus {
+  mask-image: url("http://localhost:3000/assets/trolley.svg");
 }
