@@ -6,7 +6,7 @@
 //Register Bank select
 #define PAJ_BANK_SELECT			0xEF		/*Bank0=0x00,Bank1=0x01*/
 //Register Bank 0
-#define PAJ_SUSPEND			 	0x03		/*I2C suspend command (Write 0x01 to enter suspend state). I2C wake-up command is slave ID wake-up. Refer to topic ¡°I2C Bus Timing Characteristics and Protocol¡±*/
+#define PAJ_SUSPEND			 	0x03		/*I2C suspend command (Write 0x01 to enter suspend state). I2C wake-up command is slave ID wake-up. Refer to topic I2C Bus Timing Characteristics and Protocol*/
 #define PAJ_INT_FLAG1_MASK		0x41		/*Gesture detection interrupt flag mask*/
 #define PAJ_INT_FLAG2_MASK		0x42		/*Gesture/PS detection interrupt flag mask*/
 #define PAJ_INT_FLAG1		    0x43		/*Gesture detection interrupt flag*/

@@ -1,3 +1,5 @@
+@import "http://localhost:3000/assets/css/weather-icons.css"; 
+
 .forecast-container .day {
   padding-left: 0;
   padding-right: 25px;
@@ -28,7 +30,7 @@
 
 @font-face {
   font-family: "Free Sans";
-  src: url("./assets/font/FreeSans.woff") format("woff");
+  src: url("localhost:3000/assets/font/FreeSans.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }

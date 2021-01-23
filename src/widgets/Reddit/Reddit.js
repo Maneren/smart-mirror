@@ -27,13 +27,6 @@ class Reddit extends WidgetTemplate {
     };
   }
 
-  get config () {
-    return {
-      ...this.defaults,
-      ...this.state.config
-    };
-  }
-
   componentDidMount () {
     super.componentDidMount();
     this.updateState();

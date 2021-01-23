@@ -33,7 +33,8 @@ async function fetchConnectionsFromPMDP (from, to, datetime, limit) {
   // look up stations' locations
   from = await fetchFromMapyczAPI(from);
   to = await fetchFromMapyczAPI(to);
-  console.log(from, to);
+  // console.log(from, to);
+
   // scrape token from website
   const html = await requestWithProxy('https://novejizdnirady.pmdp.cz/');
   const tokenStart = html.search(/<input type='hidden' id='__APIRequestVerificationToken' name='__APIRequestVerificationToken' value='.*'>/gi);

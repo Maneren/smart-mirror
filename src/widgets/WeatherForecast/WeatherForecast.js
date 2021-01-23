@@ -3,7 +3,6 @@ import React from 'react';
 import WidgetTemplate from '../template.js';
 
 import './WeatherForecast.css';
-import './assets/css/weather-icons.css';
 
 import Loader from '../../components/Loader';
 
@@ -44,13 +43,6 @@ class WeatherForecast extends WidgetTemplate {
       '11n': 'wi-night-thunderstorm',
       '13n': 'wi-night-snow',
       '50n': 'wi-night-alt-cloudy-windy'
-    };
-  }
-
-  get config () {
-    return {
-      ...this.defaults,
-      ...this.state.config
     };
   }
 

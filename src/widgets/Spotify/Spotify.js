@@ -15,13 +15,6 @@ class Spotify extends WidgetTemplate {
     };
   }
 
-  get config () {
-    return {
-      ...this.defaults,
-      ...this.state.config
-    };
-  }
-
   static get menuName () {
     return 'Spotify';
   }

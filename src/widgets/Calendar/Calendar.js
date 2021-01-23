@@ -23,13 +23,6 @@ class Calendar extends WidgetTemplate {
     };
   }
 
-  get config () {
-    return {
-      ...this.defaults,
-      ...this.state.config
-    };
-  }
-
   static get menuName () {
     return 'Kalendář';
   }
@@ -39,7 +32,7 @@ class Calendar extends WidgetTemplate {
   }
 
   getDataToSave () {
-    return { type: this.constructor.name, config: { ...this.state.config, credentials: 'Calendar' } };
+    return { type: this.constructor.name, config: this.state.config };
   }
 
   componentDidMount () {
@@ -116,7 +109,7 @@ class Calendar extends WidgetTemplate {
   }
 
   async updateState () {
-    const { url } = this.config.credentials;
+    const { url } = this.config;
     if (!url || url === '') return;
 
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
@@ -136,7 +129,7 @@ class Calendar extends WidgetTemplate {
   }
 
   render () {
-    if (this.config.credentials.url === '') return (<div className='calendar-container'>Missing source URL</div>);
+    if (this.config.url === '') return (<div className='calendar-container'>Missing source URL</div>);
 
     if (!this.state.loaded) {
       return (

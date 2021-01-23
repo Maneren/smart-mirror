@@ -26,13 +26,6 @@ class Bakalari extends WidgetTemplate {
 
   static get menuName () { return 'Bakaláři'; }
 
-  get config () {
-    return {
-      ...this.defaults,
-      ...this.state.config
-    };
-  }
-
   getDataToSave () {
     return { type: this.constructor.name, config: { ...this.state.config, credentials: 'Bakalari' } };
   }
@@ -43,7 +36,7 @@ class Bakalari extends WidgetTemplate {
   }
 
   initialize () {
-    const { username, password, server } = this.config.credentials;
+    const { username, password, server } = this.config;
     const user = new User(username, password, server);
     user.onReady(this.updateState.bind(this));
     this.setState({ user });

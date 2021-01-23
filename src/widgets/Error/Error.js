@@ -9,7 +9,7 @@ class Error extends WidgetTemplate {
 
   render () {
     return (
-      <div className='fallback-container'>Specified Module not found</div>
+      <div className='fallback-container'>Module not found</div>
     );
   }
 }

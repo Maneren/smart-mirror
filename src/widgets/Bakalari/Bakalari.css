@@ -3,15 +3,15 @@
 }
 
 .bakalari-container .weekday {
-  min-width: 80px;
+  min-width: 70px;
   color: #bebebe;
   border: 0 solid;
 }
 
 .bakalari-container .lesson {
-  min-width: 53px;
+  min-width: 50px;
   border: 3px solid #838383;
-  font-size: 1.1rem;
+  font-size: 1rem;
 }
 
 .bakalari-container .lesson div {
@@ -35,6 +35,6 @@
 }
 
 .bakalari-container .room {
-font-size: 0.5rem;
-color: #bebebe;
+  font-size: 0.5rem;
+  color: #bebebe;
 }

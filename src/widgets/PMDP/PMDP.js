@@ -18,13 +18,6 @@ class PMDP extends WidgetTemplate {
     };
   }
 
-  get config () {
-    return {
-      ...this.defaults,
-      ...this.state.config
-    };
-  }
-
   static get menuName () {
     return 'Spojení PMDP';
   }
@@ -46,7 +39,7 @@ class PMDP extends WidgetTemplate {
       {
         type: 'number',
         id: 'minTimeBeforeDepart',
-        label: 'Kam',
+        label: 'Čas chůze na zastávku',
         placeholder: ''
       }
     ];
@@ -63,6 +56,7 @@ class PMDP extends WidgetTemplate {
   }
 
   updateState () {
+    console.log('UPDATE');
     const { from, to, limit, minTimeBeforeDepart } = this.config;
     for (const value of [from, to, limit]) { if (!value || value === '') return; }
     const datetime = new Date(Date.now() + minTimeBeforeDepart * 60 * 1000);

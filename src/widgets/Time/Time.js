@@ -8,7 +8,8 @@ class Time extends WidgetTemplate {
   constructor (props) {
     super(props);
     this.defaults = {
-      showSeconds: true
+      showSeconds: true,
+      type: 'digital'
     };
     this.state = {
       config: props.config,
@@ -31,15 +32,17 @@ class Time extends WidgetTemplate {
         type: 'bool',
         id: 'showSeconds',
         label: 'Ukazovat sekundy'
+      },
+      {
+        type: 'select',
+        id: 'type',
+        label: 'Motiv',
+        options: [
+          { label: 'Analogové', id: 'analog' },
+          { label: 'Digitální', id: 'digital' }
+        ]
       }
     ];
-  }
-
-  get config () {
-    return {
-      ...this.defaults,
-      ...this.state.config
-    };
   }
 
   componentDidMount () {

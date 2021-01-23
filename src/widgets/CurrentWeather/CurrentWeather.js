@@ -5,7 +5,6 @@ import request from 'request-promise-native';
 import WidgetTemplate from '../template.js';
 
 import './CurrentWeather.css';
-import './assets/css/weather-icons.css';
 
 import Loader from '../../components/Loader';
 
@@ -44,13 +43,6 @@ class CurrentWeather extends WidgetTemplate {
       '11n': 'wi-night-thunderstorm',
       '13n': 'wi-night-snow',
       '50n': 'wi-night-alt-cloudy-windy'
-    };
-  }
-
-  get config () {
-    return {
-      ...this.defaults,
-      ...this.state.config
     };
   }
 
@@ -194,8 +186,8 @@ class CurrentWeather extends WidgetTemplate {
           <span className='spacer'>&nbsp;</span>
           <span className='spacer'>&nbsp;</span>
           <span>{weather.humidity}</span>
-          <sup className='sup-spacer'>&nbsp;</sup>
-          <sup className='wi wi-humidity humidity-icon'>&nbsp;</sup>
+          <span className='sup-spacer'>&nbsp;</span>
+          <span className='wi wi-humidity humidity-icon'>&nbsp;</span>
           <span className='spacer'>&nbsp;</span>
           <span className={`wi dimmed ${weather.sunriseSunsetIcon}`} />
           <span className='spacer'>&nbsp;</span>
