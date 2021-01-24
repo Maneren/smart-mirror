@@ -261,11 +261,13 @@ class App extends Component {
             ))
           }
         </Pagination>
-        <Button className='test' onClick={() => this.handleSensorInput('Left\n')}>Prev</Button>
-        <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST save</Button>
-        <Button className='test' onClick={this.toggleEditMode.bind(this)}>Edit</Button>
-        <Button className='test' onClick={this.saveEdit.bind(this)}>Save Edit</Button>
-        <Button className='test' onClick={() => this.handleSensorInput('Right\n')}>Next</Button>
+        <div className='buttons'>
+          <Button className='test' onClick={() => this.handleSensorInput('Left\n')}>Prev</Button>
+          <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST save</Button>
+          <Button className='test' onClick={this.toggleEditMode.bind(this)}>Edit</Button>
+          <Button className='test' onClick={this.saveEdit.bind(this)}>Save Edit</Button>
+          <Button className='test' onClick={() => this.handleSensorInput('Right\n')}>Next</Button>
+        </div>
       </div>
     );
   }
