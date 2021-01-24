@@ -35,7 +35,7 @@ function createWindow () {
   // Listen on a specific host via the HOST environment variable
   const host = process.env.HOST || '127.0.0.1';
   // Listen on a specific port via the PORT environment variable
-  const port = process.env.PORT || 8080;
+  const port = process.env.PORT || 3100;
   console.log('Starting CORS Anywhere on ' + host + ':' + port);
   const CORSProxy = require('cors-anywhere');
   CORSProxy.createServer({

@@ -63,8 +63,7 @@ class App extends Component {
     // get sensor events
     const { spawn } = await window.require('child_process');
 
-    // this.exe = spawn('node', ['-i', './src/gestureSensor/print.js']);
-    // this.exe = spawn('sudo', ['./PAJ7620U2']);
+    // this.exe = spawn('sudo', ['./src/gestureSensor/PAJ7620U2']);
     this.exe = spawn('pwd');
     // this.exe.stdout.on('data', data => this.handleSensorInput(data));
     this.exe.stdout.on('data', data => console.log(`stdout: ${data}`));

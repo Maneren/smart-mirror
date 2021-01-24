@@ -21,8 +21,7 @@
  */
 @font-face {
   font-family: "weathericons";
-  src: url("http://127.0.0.1:3100/http://localhost:3000/assets/font/weathericons-regular-webfont.woff")
-    format("woff");
+  src: url("../font/weathericons-regular-webfont.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }

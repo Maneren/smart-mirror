@@ -64,11 +64,18 @@ class General {
   static mapRng (range, fn) {
     const result = [];
     let i = 0;
-    for (const el of range) {
-      result.push(fn(el, i));
+    // for (const el of range) {
+    //   result.push(fn(el, i));
+    //   i++;
+    // }
+    // return result;
+
+    while (true) {
+      const next = range.next();
+      if (next.done) return result;
+      result.push(fn(next.value, i));
       i++;
     }
-    return result;
   }
 
   static reduceRng (range, fn, total = 0) {
@@ -82,7 +89,7 @@ class General {
 }
 class Network {
   static requestWithProxy (url, options) {
-    // if (process) return request(`${url}`, { origin: 'smart-mirror', ...options });
+    if (process) return request(`${url}`, { origin: 'smart-mirror', ...options });
     return request(`http://127.0.0.1:3100/${url}`, { origin: 'smart-mirror', ...options });
   }
 

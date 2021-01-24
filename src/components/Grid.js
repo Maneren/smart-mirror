@@ -64,7 +64,7 @@ class Grid extends Component {
           gridTemplateRows: `repeat(${height}, 1fr)`
         }}
       >
-        {mapRng(range(this.numberOfTiles), (e, i) =>
+        {mapRng(range(this.numberOfTiles), i =>
           <Tile
             key={i}
             index={i}
