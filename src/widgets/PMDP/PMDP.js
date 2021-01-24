@@ -99,7 +99,7 @@ class PMDP extends WidgetTemplate {
                     <div className='segment' key={index}>
                       <div className={`line ${segment.line.type}`}>
                         <div className='line-icon-wrapper'>
-                          <img src={`http://localhost:3000/assets/pmdp/${segment.line.type}.png`} alt='line type icon' className='line-icon' />
+                          <img src={`${process.env.PUBLIC_URL}/assets/pmdp/${segment.line.type}.png`} alt='line type icon' className='line-icon' />
                         </div>
                         <div>{segment.line.number}</div>
                       </div>

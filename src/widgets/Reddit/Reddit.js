@@ -154,11 +154,11 @@ class Reddit extends WidgetTemplate {
         </a>
         <div className='comments-score'>
           <span className='score'>
-            <img src='http://localhost:3000/assets/upvote.svg' alt='upvote icon' />
+            <img src={process.env.PUBLIC_URL + '/assets/upvote.svg'} alt='upvote icon' />
             <span>{activePost.score}</span>
           </span>
           <span className='comments'>
-            <img src='http://localhost:3000/assets/comments.svg' alt='comments icon' />
+            <img src={process.env.PUBLIC_URL + '/assets/comments.svg'} alt='comments icon' />
             <span>{activePost.comments}</span>
           </span>
         </div>
