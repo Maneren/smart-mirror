@@ -20,7 +20,7 @@
 
 @font-face {
   font-family: "Free Sans";
-  src: url("localhost:3000/assets/font/FreeSans.woff") format("woff");
+  src: url("http://localhost:3000/assets/font/FreeSans.woff") format("woff");
   font-weight: normal;
   font-style: normal;
 }
