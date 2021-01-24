@@ -64,12 +64,14 @@ class App extends Component {
     const { spawn } = await window.require('child_process');
 
     // this.exe = spawn('node', ['-i', './src/gestureSensor/print.js']);
-    this.exe = spawn('sudo', ['./PAJ7620U2']);
-    this.exe.stdout.on('data', data => this.handleSensorInput(data));
+    // this.exe = spawn('sudo', ['./PAJ7620U2']);
+    this.exe = spawn('pwd');
+    // this.exe.stdout.on('data', data => this.handleSensorInput(data));
+    this.exe.stdout.on('data', data => console.log(`stdout: ${data}`));
     this.exe.stderr.on('data', data => console.log(`stderr: ${data}`));
     this.exe.on('close', exitCode => {
       console.error('Sensor listener exited: ' + exitCode);
-      this.initGestureSensor();
+      // this.initGestureSensor();
     });
     console.log(this.exe);
   }
