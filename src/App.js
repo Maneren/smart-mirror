@@ -56,24 +56,34 @@ class App extends Component {
       }
     );
 
-    // this.initGestureSensor();
+    this.initGestureSensor();
   }
 
   async initGestureSensor () {
     // get sensor events
     const { spawn } = await window.require('child_process');
 
-    this.exe = spawn('node', ['-i', './src/gestureSensor/print.js']);
+    // this.exe = spawn('node', ['-i', './src/gestureSensor/print.js']);
+    this.exe = spawn('sudo', ['./PAJ7620U2']);
     this.exe.stdout.on('data', data => this.handleSensorInput(data));
     this.exe.stderr.on('data', data => console.log(`stderr: ${data}`));
-    this.exe.on('close', exitCode => console.error('Sensor listener exited: ' + exitCode));
+    this.exe.on('close', exitCode => {
+      console.error('Sensor listener exited: ' + exitCode);
+      this.initGestureSensor();
+    });
     console.log(this.exe);
   }
 
   handleSensorInput (input) {
-    const command = input.toString().substr(0, input.length - 1);
+    const commandsTable = {
+      Up: 'Left',
+      Right: 'Up',
+      Down: 'Right',
+      Left: 'Down'
+    };
+    const command = commandsTable[input.toString().substr(0, input.length - 1)];
     console.log(command);
-
+    if (!command) return;
     const { sleeping, pagesLocked } = this.state;
 
     if (sleeping) {
