@@ -1,5 +1,5 @@
 PAJ7620U2:PAJ7620U2.c PAJ7620U2.h
-	gcc -Wall PAJ7620U2.c -o PAJ7620U2 -lbcm2835 -lm -I.
+	gcc -Wall PAJ7620U2.c -o PAJ7620U2 -lm -I.
 clean:
 	rm PAJ7620U2
 
