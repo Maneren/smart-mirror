@@ -126,10 +126,6 @@ class App extends Component {
     }
   }
 
-  componentWillUnmount () {
-    if (this.exe) this.exe.close();
-  }
-
   async loadConfig () {
     /* const fs = await window.require('fs');
 
