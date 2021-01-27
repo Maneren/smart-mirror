@@ -11,7 +11,7 @@ import widgetsDB from './widgets';
 import data from './config/config.json';
 
 class App extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       availableWidgets: widgetsDB,
@@ -26,7 +26,7 @@ class App extends Component {
     this.handlesSaveEdits = [];
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.loadConfig().then(
       data => {
         const { apiKeys } = data;
@@ -56,33 +56,49 @@ class App extends Component {
       }
     );
 
-    this.initGestureSensor();
+    // this.initGestureSensor();
   }
 
-  async initGestureSensor () {
+  componentWillMount() {
+    document.addEventListener("keydown", this.handleKeyDown.bind(this));
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener("keydown", this.handleKeyDown.bind(this));
+  }
+
+  handleKeyDown(event) {
+    console.log(event);
+    const keyCode = event.code;
+    if(keyCode.startsWith('Arrow')) this.handleSensorInput(keyCode.substring(5));
+  }
+
+  async initGestureSensor() {
     // get sensor events
     const { spawn } = await window.require('child_process');
 
-    // this.exe = spawn('sudo', ['./src/gestureSensor/PAJ7620U2']);
-    this.exe = spawn('pwd');
-    // this.exe.stdout.on('data', data => this.handleSensorInput(data));
+    this.exe = spawn('sudo', ['./src/gestureSensor/PAJ7620U2']);
+    // this.exe = spawn('pwd');
+    this.exe.stdout.on('data', data => this.handleSensorInput(data));
     this.exe.stdout.on('data', data => console.log(`stdout: ${data}`));
     this.exe.stderr.on('data', data => console.log(`stderr: ${data}`));
     this.exe.on('close', exitCode => {
       console.error('Sensor listener exited: ' + exitCode);
-      // this.initGestureSensor();
+      this.initGestureSensor();
+      console.log('RESTARTING SENSOR');
     });
     console.log(this.exe);
   }
 
-  handleSensorInput (input) {
+  handleSensorInput(command) {
+    console.log(command.toString());
     const commandsTable = {
       Up: 'Left',
       Right: 'Up',
       Down: 'Right',
       Left: 'Down'
     };
-    const command = commandsTable[input.toString().substr(0, input.length - 1)];
+    // command = commandsTable[input.toString().substr(0, input.length - 1)];
     console.log(command);
     if (!command) return;
     const { sleeping, pagesLocked } = this.state;
@@ -127,7 +143,7 @@ class App extends Component {
     }
   }
 
-  async loadConfig () {
+  async loadConfig() {
     /* const fs = await window.require('fs');
 
     return await new Promise((resolve, reject) => {
@@ -142,7 +158,7 @@ class App extends Component {
     return data;
   }
 
-  async handleSaveConfig () {
+  async handleSaveConfig() {
     const data = this.dataToSave;
 
     console.log(data);
@@ -159,23 +175,23 @@ class App extends Component {
     }); */
   }
 
-  get dataToSave () {
+  get dataToSave() {
     const { apiKeys, credentials } = this.state;
     const pages = this.handlesForDataToSave.map(f => f ? f() : {});
     return { credentials, apiKeys, pages };
   }
 
-  nextPage () {
+  nextPage() {
     const { activePage, pages } = this.state;
     this.setState({ activePage: (activePage + 1) % pages.length });
   }
 
-  previousPage () {
+  previousPage() {
     const { activePage, pages } = this.state;
     this.setState({ activePage: (activePage - 1 + pages.length) % pages.length });
   }
 
-  toggleEditMode () {
+  toggleEditMode() {
     const { editMode } = this.state;
     if (editMode) {
       const confirm = window.confirm('Pokračovat bez uložení?');
@@ -184,7 +200,7 @@ class App extends Component {
     this.setState({ editMode: !editMode });
   }
 
-  saveEdit () {
+  saveEdit() {
     this.handlesSaveEdits.forEach(f => f());
     this.setState({ editMode: false });
     setTimeout(() => {
@@ -193,7 +209,7 @@ class App extends Component {
     }, 500);
   }
 
-  render () {
+  render() {
     const { sleeping, pages, editMode, availableWidgets, activePage, saveEdit } = this.state;
     if (sleeping) return <div className='App' />;
     if (pages === undefined) {
@@ -249,7 +265,7 @@ class App extends Component {
       );
     }
     return (
-      <div className='App'>
+      <div className='App' onKeyPress={e => this.handleKeyDown(e)}>
         <Pagination activePage={activePage}>
           {
             pages.map((page, i) => (
@@ -269,11 +285,11 @@ class App extends Component {
           }
         </Pagination>
         <div className='buttons'>
-          <Button className='test' onClick={() => this.handleSensorInput('Left\n')}>Prev</Button>
-          <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST save</Button>
-          <Button className='test' onClick={this.toggleEditMode.bind(this)}>Edit</Button>
+          {/* <Button className='test' onClick={() => this.handleSensorInput('Up\n')}>Prev</Button> */}
+          {/* <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST save</Button> */}
+          <Button className='test' onClick={this.toggleEditMode.bind(this)}>Toggle Edit</Button>
           <Button className='test' onClick={this.saveEdit.bind(this)}>Save Edit</Button>
-          <Button className='test' onClick={() => this.handleSensorInput('Right\n')}>Next</Button>
+          {/* <Button className='test' onClick={() => this.handleSensorInput('Down\n')}>Next</Button> */}
         </div>
       </div>
     );

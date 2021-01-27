@@ -55,8 +55,8 @@ async function fetchConnectionsFromPMDP (from, to, datetime, limit) {
     IsArrivalTime: false,
     DirectConnectionsOnly: false,
     BarrierFreeConnectionsOnly: false,
-    MaxTransfers: 3,
-    MaxTransferTimeMin: 30,
+    MaxTransfers: 2,
+    MaxTransferTimeMin: 10,
     ResultsStartIndex: 0,
     ResultsEndIndex: limit,
     FullResults: true
