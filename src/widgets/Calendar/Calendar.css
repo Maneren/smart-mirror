@@ -8,17 +8,16 @@
   max-width: 400px;
 }
 .calendar-container .event {
-  border-top: 2px solid #838383;
+  /* border-top: 2px solid #838383; */
   height: 3rem;
-  
 }
 .calendar-container .datetime {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-right: 1px solid #838383;
+  /* border-right: 1px solid #838383; */
   max-width: 150px;
 }
-.calendar-container table{
+.calendar-container table {
   width: 480px;
 }

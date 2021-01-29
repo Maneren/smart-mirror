@@ -86,21 +86,28 @@ class General {
     }
     return total;
   }
+
+  static async isElectronProduction () {
+    if (window.require === undefined) return false;
+    const electron = await window.require('electron');
+    const isDev = electron.remote.process.argv.some(arg => arg === '--dev');
+    return !isDev;
+  }
 }
 class Network {
-  static requestWithProxy (url, options) {
-    if (process) return request(`${url}`, { origin: 'smart-mirror', ...options });
-    return request(`http://127.0.0.1:3100/${url}`, { origin: 'smart-mirror', ...options });
+  static async requestWithProxy (url, options) {
+    const useProxy = !await General.isElectronProduction();
+    if (useProxy) url = `http://127.0.0.1:3100/${url}`;
+    return await request(url, { origin: 'smart-mirror', ...options });
   }
 
   static decodeURL (url) {
     if (typeof url === 'string') {
       let prefix;
-      if (url[4] === ':') prefix = 'http://';
-      else if (url[5] === ':') prefix = 'https://';
+      if (url[5] === ':') prefix = 'https://';
+      else prefix = 'http://';
 
-      url = url.substr(8);
-
+      url = url.substr(prefix.length);
       const [domain, ...target] = url.split('/');
       const [page, params] = target[target.length - 1].split('?');
 

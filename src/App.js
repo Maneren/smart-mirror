@@ -8,10 +8,16 @@ import Pagination from './components/Pagination';
 
 import widgetsDB from './widgets';
 
-import data from './config/config.json';
+// import data from './config/config.json';
+import(
+  /* webpackChunkName: "json_menu" */
+  './config.json'
+).then(data => {
+  console.log('data: ', data.default);
+});
 
 class App extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props);
     this.state = {
       availableWidgets: widgetsDB,
@@ -26,54 +32,23 @@ class App extends Component {
     this.handlesSaveEdits = [];
   }
 
-  componentDidMount() {
-    this.loadConfig().then(
-      data => {
-        const { apiKeys } = data;
-        const pages = data.pages.map(page => {
-          return {
-            widgets: page.widgets.map(
-              widget => {
-                const type = widget.type;
-                if (widget.hide || type === '') return widgetsDB.Null;
-                else if (widgetsDB[type] !== undefined) return widgetsDB[type];
-                else return widgetsDB.Error;
-              }
-            ),
-            configs: page.widgets
-              .map(widget => widget.config === undefined ? {} : widget.config)
-              .map(config => {
-                if (config.apiKey) return { ...config, apiKey: apiKeys[config.apiKey] };
-                else return config;
-              }),
-            width: page.width,
-            height: page.height
-          };
-        }
-        );
-        console.log(pages);
-        this.setState({ pages, apiKeys });
-      }
-    );
+  componentDidMount () {
+    this.loadConfig().then(data => this.parseConfig(data));
 
     // this.initGestureSensor();
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
-  componentWillMount() {
-    document.addEventListener("keydown", this.handleKeyDown.bind(this));
+  componentWillUnmount () {
+    document.removeEventListener('keydown', this.handleKeyDown.bind(this));
   }
 
-  componentWillUnmount() {
-    document.removeEventListener("keydown", this.handleKeyDown.bind(this));
-  }
-
-  handleKeyDown(event) {
-    console.log(event);
+  handleKeyDown (event) {
     const keyCode = event.code;
-    if(keyCode.startsWith('Arrow')) this.handleSensorInput(keyCode.substring(5));
+    if (keyCode.startsWith('Arrow')) this.handleSensorInput(keyCode.substring(5));
   }
 
-  async initGestureSensor() {
+  async initGestureSensor () {
     // get sensor events
     const { spawn } = await window.require('child_process');
 
@@ -90,14 +65,14 @@ class App extends Component {
     console.log(this.exe);
   }
 
-  handleSensorInput(command) {
+  handleSensorInput (command) {
     console.log(command.toString());
-    const commandsTable = {
-      Up: 'Left',
-      Right: 'Up',
-      Down: 'Right',
-      Left: 'Down'
-    };
+    // const commandsTable = {
+    //   Up: 'Left',
+    //   Right: 'Up',
+    //   Down: 'Right',
+    //   Left: 'Down'
+    // };
     // command = commandsTable[input.toString().substr(0, input.length - 1)];
     console.log(command);
     if (!command) return;
@@ -143,22 +118,24 @@ class App extends Component {
     }
   }
 
-  async loadConfig() {
-    /* const fs = await window.require('fs');
+  async loadConfig () {
+    const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
+    await sleep(2500);
+    // return data;
+
+    const fs = await window.require('fs');
 
     return await new Promise((resolve, reject) => {
       // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-      fs.readFile('./public/config.json', 'utf8', (err, data) => {
+      fs.readFile('./build/config.json', 'utf8', (err, data) => {
         if (err) reject(err);
+        console.log(data);
         resolve(JSON.parse(data));
       });
-    }); */
-    const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
-    await sleep(2500);
-    return data;
+    });
   }
 
-  async handleSaveConfig() {
+  async handleSaveConfig () {
     const data = this.dataToSave;
 
     console.log(data);
@@ -168,30 +145,57 @@ class App extends Component {
 
     return await new Promise((resolve, reject) => {
       // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-      fs.writeFile('.src/config/config.json', JSON.stringify(data), (err, data) => {
+      fs.writeFile('./public/config.json', JSON.stringify(data), (err, data) => {
         if (err !== null) reject(err);
         resolve(JSON.parse(data));
       });
     }); */
   }
 
-  get dataToSave() {
+  parseConfig (data) {
+    const { apiKeys } = data;
+    const pages = data.pages.map(page => {
+      return {
+        widgets: page.widgets.map(
+          widget => {
+            const type = widget.type;
+            if (widget.hide || type === '') return widgetsDB.Null;
+            else if (widgetsDB[type] !== undefined) return widgetsDB[type];
+            else return widgetsDB.Error;
+          }
+        ),
+        configs: page.widgets
+          .map(widget => widget.config === undefined ? {} : widget.config)
+          .map(config => {
+            if (config.apiKey) return { ...config, apiKey: apiKeys[config.apiKey] };
+            else return config;
+          }),
+        width: page.width,
+        height: page.height
+      };
+    }
+    );
+    console.log(pages);
+    this.setState({ pages, apiKeys });
+  }
+
+  get dataToSave () {
     const { apiKeys, credentials } = this.state;
     const pages = this.handlesForDataToSave.map(f => f ? f() : {});
     return { credentials, apiKeys, pages };
   }
 
-  nextPage() {
+  nextPage () {
     const { activePage, pages } = this.state;
     this.setState({ activePage: (activePage + 1) % pages.length });
   }
 
-  previousPage() {
+  previousPage () {
     const { activePage, pages } = this.state;
     this.setState({ activePage: (activePage - 1 + pages.length) % pages.length });
   }
 
-  toggleEditMode() {
+  toggleEditMode () {
     const { editMode } = this.state;
     if (editMode) {
       const confirm = window.confirm('Pokračovat bez uložení?');
@@ -200,7 +204,7 @@ class App extends Component {
     this.setState({ editMode: !editMode });
   }
 
-  saveEdit() {
+  saveEdit () {
     this.handlesSaveEdits.forEach(f => f());
     this.setState({ editMode: false });
     setTimeout(() => {
@@ -209,7 +213,7 @@ class App extends Component {
     }, 500);
   }
 
-  render() {
+  render () {
     const { sleeping, pages, editMode, availableWidgets, activePage, saveEdit } = this.state;
     if (sleeping) return <div className='App' />;
     if (pages === undefined) {

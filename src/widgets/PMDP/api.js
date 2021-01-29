@@ -58,7 +58,7 @@ async function fetchConnectionsFromPMDP (from, to, datetime, limit) {
     MaxTransfers: 2,
     MaxTransferTimeMin: 10,
     ResultsStartIndex: 0,
-    ResultsEndIndex: limit,
+    ResultsEndIndex: limit + 5,
     FullResults: true
   });
 

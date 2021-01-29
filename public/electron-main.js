@@ -13,7 +13,7 @@ let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({ width: 1920, height: 1080, webPreferences: { nodeIntegration: true, webSecurity: true } });
+  mainWindow = new BrowserWindow({ width: 1920, height: 1080, webPreferences: { nodeIntegration: true, webSecurity: true, enableRemoteModule: true } });
 
   // and load the index.html of the app.
   const startUrl = process.env.ELECTRON_START_URL || url.format({
