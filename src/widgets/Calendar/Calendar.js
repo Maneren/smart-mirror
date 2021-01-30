@@ -28,11 +28,18 @@ class Calendar extends WidgetTemplate {
   }
 
   static get configInput () {
-    return [];
+    return [
+      {
+        type: 'text',
+        id: 'url',
+        label: 'URL',
+        placeholder: 'URL kalendare (soubor .ical)'
+      }
+    ];
   }
 
   getDataToSave () {
-    return { type: this.constructor.name, config: this.state.config };
+    return { type: 'Calendar', config: this.state.config };
   }
 
   componentDidMount () {

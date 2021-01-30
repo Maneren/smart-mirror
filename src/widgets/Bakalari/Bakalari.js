@@ -27,7 +27,7 @@ class Bakalari extends WidgetTemplate {
   static get menuName () { return 'Bakaláři'; }
 
   getDataToSave () {
-    return { type: this.constructor.name, config: { ...this.state.config, credentials: 'Bakalari' } };
+    return { type: 'Bakalari', config: this.state.config };
   }
 
   componentDidMount () {
@@ -153,9 +153,7 @@ class Bakalari extends WidgetTemplate {
   }
 
   get missingCredentials () {
-    const { credentials } = this.config;
-    if (!credentials) return false;
-    const { server, username, password } = this.config.credentials;
+    const { server, username, password } = this.config;
     return (!server || server === '') ||
            (!username || username === '') ||
            (!password || password === '');

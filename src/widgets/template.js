@@ -6,10 +6,6 @@ class WidgetTemplate extends Component {
     this.defaults = {};
   }
 
-  getDataToSave () {
-    return { type: this.constructor.name, config: this.props.config };
-  }
-
   get config () {
     return {
       ...this.defaults,

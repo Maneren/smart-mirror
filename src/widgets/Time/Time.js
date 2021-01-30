@@ -26,6 +26,10 @@ class Time extends WidgetTemplate {
     return 'Čas';
   }
 
+  getDataToSave () {
+    return { type: 'Time', config: this.props.config };
+  }
+
   static get configInput () {
     return [
       {
@@ -53,10 +57,10 @@ class Time extends WidgetTemplate {
 
   updateState () {
     const now = new Date();
-
-    const hours = now.getHours();
+    const [hours, minutes, seconds] = now.toLocaleTimeString('cs-CZ', {}).split(':');
+    /*  const hours = now.getHours();
     const minutes = now.getMinutes();
-    const seconds = now.getSeconds();
+    const seconds = now.getSeconds(); */
 
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' };
 
@@ -75,7 +79,7 @@ class Time extends WidgetTemplate {
   }
 
   render () {
-    const { hours, minutes, seconds } = this.state.time;
+    let { hours, minutes, seconds } = this.state.time;
     const { type, showSeconds } = this.config;
     if (type === 'digital') {
       return (
@@ -89,6 +93,7 @@ class Time extends WidgetTemplate {
         </div>
       );
     } else {
+      [hours, minutes, seconds] = [hours, minutes, seconds].map(x => parseInt(x));
       const degS = ((seconds + minutes * 60 + hours * 3600) / 60) * 360;
       const degM = ((minutes + hours * 60) / 60) * 360;
       const degH = ((minutes / 60 + hours) / 12) * 360;

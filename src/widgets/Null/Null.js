@@ -4,7 +4,7 @@ import WidgetTemplate from '../template.js';
 
 class Null extends WidgetTemplate {
   getDataToSave () {
-    return { type: '', config: {} };
+    return { };
   }
 
   render () {

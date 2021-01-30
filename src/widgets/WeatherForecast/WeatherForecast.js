@@ -62,7 +62,7 @@ class WeatherForecast extends WidgetTemplate {
   }
 
   getDataToSave () {
-    return { type: this.constructor.name, config: { ...this.state.config, apiKey: 'OpenWeather' } };
+    return { type: 'WeatherForecast', config: { ...this.state.config, apiKey: 'OpenWeather' } };
   }
 
   componentDidMount () {

@@ -46,7 +46,7 @@ class PMDP extends WidgetTemplate {
   }
 
   getDataToSave () {
-    return { type: this.constructor.name, config: this.state.config };
+    return { type: 'PMDP', config: this.state.config };
   }
 
   componentDidMount () {

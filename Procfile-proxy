@@ -1,2 +1,0 @@
-react: react-scripts start
-proxy: node src/proxy.js

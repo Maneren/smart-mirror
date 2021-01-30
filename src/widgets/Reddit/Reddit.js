@@ -27,6 +27,10 @@ class Reddit extends WidgetTemplate {
     };
   }
 
+  getDataToSave () {
+    return { type: 'Reddit', config: this.props.config };
+  }
+
   componentDidMount () {
     super.componentDidMount();
     this.updateState();

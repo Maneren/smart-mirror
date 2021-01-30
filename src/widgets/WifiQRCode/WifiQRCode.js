@@ -7,6 +7,10 @@ class WifiQRCode extends WidgetTemplate {
     return 'Wifi QR kód';
   }
 
+  getDataToSave () {
+    return { type: 'WifiQRCode', config: this.props.config };
+  }
+
   static get configInput () {
     return [
       {

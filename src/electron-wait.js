@@ -12,7 +12,7 @@ const tryConnection = () => client.connect({ port: port }, () => {
     console.log('starting electron');
     startedElectron = true;
     const exec = require('child_process').exec;
-    const electron = exec('npm run electron');
+    const electron = exec('electron "public/electron-main.js" --dev');
     electron.stdout.on('data', function (data) {
       console.log('stdout: ' + data.toString());
     });

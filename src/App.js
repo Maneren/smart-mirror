@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'react-bootstrap';
+import { join } from 'path';
 import './App.css';
 
 import Grid from './components/Grid';
@@ -8,13 +9,7 @@ import Pagination from './components/Pagination';
 
 import widgetsDB from './widgets';
 
-// import data from './config/config.json';
-import(
-  /* webpackChunkName: "json_menu" */
-  './config.json'
-).then(data => {
-  console.log('data: ', data.default);
-});
+import data from './config.json';
 
 class App extends Component {
   constructor (props) {
@@ -118,16 +113,25 @@ class App extends Component {
     }
   }
 
+  get pathToConfig () {
+    return (async () => {
+      const electron = await window.require('electron');
+      const appPath = electron.remote.app.getAppPath();
+      const pathToConfig = join(appPath, data);
+      return pathToConfig;
+    })();
+  }
+
   async loadConfig () {
     const sleep = milis => new Promise(resolve => setTimeout(resolve, milis));
     await sleep(2500);
-    // return data;
 
     const fs = await window.require('fs');
+    const pathToConfig = await this.pathToConfig;
+    console.log(pathToConfig);
 
     return await new Promise((resolve, reject) => {
-      // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-      fs.readFile('./build/config.json', 'utf8', (err, data) => {
+      fs.readFile(pathToConfig, 'utf8', (err, data) => {
         if (err) reject(err);
         console.log(data);
         resolve(JSON.parse(data));
@@ -138,28 +142,30 @@ class App extends Component {
   async handleSaveConfig () {
     const data = this.dataToSave;
 
-    console.log(data);
     console.log(JSON.stringify(data, null, 2));
 
-    /* const fs = await window.require('fs');
+    const fs = await window.require('fs');
+    const pathToConfig = await this.pathToConfig;
 
-    return await new Promise((resolve, reject) => {
-      // We call resolve(...) when what we were doing asynchronously was successful, and reject(...) when it failed.
-      fs.writeFile('./public/config.json', JSON.stringify(data), (err, data) => {
+    await new Promise((resolve, reject) => {
+      fs.writeFile(pathToConfig, JSON.stringify(data, null, 2), (err, data) => {
         if (err !== null) reject(err);
-        resolve(JSON.parse(data));
+        resolve(data);
       });
-    }); */
+    });
+
+    window.location.reload(true);
   }
 
   parseConfig (data) {
+    console.log(data);
     const { apiKeys } = data;
     const pages = data.pages.map(page => {
       return {
         widgets: page.widgets.map(
           widget => {
             const type = widget.type;
-            if (widget.hide || type === '') return widgetsDB.Null;
+            if (widget.hide || type === '' || type === undefined) return widgetsDB.Null;
             else if (widgetsDB[type] !== undefined) return widgetsDB[type];
             else return widgetsDB.Error;
           }
@@ -180,9 +186,12 @@ class App extends Component {
   }
 
   get dataToSave () {
-    const { apiKeys, credentials } = this.state;
-    const pages = this.handlesForDataToSave.map(f => f ? f() : {});
-    return { credentials, apiKeys, pages };
+    const { apiKeys } = this.state;
+    const pages = this.handlesForDataToSave.map(f => f ? f() : { }).map((widgets, i) => {
+      const { width, height } = this.state.pages[i];
+      return { width, height, widgets };
+    });
+    return { apiKeys, pages };
   }
 
   nextPage () {
@@ -207,10 +216,7 @@ class App extends Component {
   saveEdit () {
     this.handlesSaveEdits.forEach(f => f());
     this.setState({ editMode: false });
-    setTimeout(() => {
-      const data = this.dataToSave;
-      console.log(data);
-    }, 500);
+    setTimeout(() => this.handleSaveConfig(), 100);
   }
 
   render () {
@@ -288,12 +294,9 @@ class App extends Component {
             ))
           }
         </Pagination>
-        <div className='buttons'>
-          {/* <Button className='test' onClick={() => this.handleSensorInput('Up\n')}>Prev</Button> */}
-          {/* <Button className='test' onClick={this.handleSaveConfig.bind(this)}>TEST save</Button> */}
+        <div className={`buttons ${editMode ? 'show' : ''}`}>
           <Button className='test' onClick={this.toggleEditMode.bind(this)}>Toggle Edit</Button>
           <Button className='test' onClick={this.saveEdit.bind(this)}>Save Edit</Button>
-          {/* <Button className='test' onClick={() => this.handleSensorInput('Down\n')}>Next</Button> */}
         </div>
       </div>
     );

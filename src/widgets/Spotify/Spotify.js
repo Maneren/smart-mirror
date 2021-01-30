@@ -19,6 +19,10 @@ class Spotify extends WidgetTemplate {
     return 'Spotify';
   }
 
+  getDataToSave () {
+    return { type: 'Spotify', config: this.props.config };
+  }
+
   static get configInput () {
     return [
       {

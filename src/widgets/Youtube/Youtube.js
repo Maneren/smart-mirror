@@ -18,6 +18,10 @@ class Youtube extends WidgetTemplate {
     return 'Youtube';
   }
 
+  getDataToSave () {
+    return { type: 'Youtube', config: this.props.config };
+  }
+
   static get configInput () {
     return [
       {
