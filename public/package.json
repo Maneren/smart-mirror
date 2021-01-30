@@ -12,7 +12,6 @@
     "cors-anywhere": "^0.4.3"
   },
   "devDependencies": {
-    "electron": "11.0.2",
-    "electron-packager": "^15.2.0"
+    "electron": "11.0.2"
   }
 }

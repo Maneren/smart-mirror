@@ -78,19 +78,18 @@
     "workbox-webpack-plugin": "5.1.4"
   },
   "scripts": {
-    "start": "npm run react-dev",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js",
-    "electron": "electron build/electron-main.js",
-    "electron-dev": "node scripts/build.js && cd public && npm i && cd ../build && electron electron-main.js",
-    "electron-build": "electron-packager ./build \"SmartMirror\" --platform=win32 --arch=x64 --out=dist/"
+    "start": "electron build/electron-main.js",
+    "compile": "cd public && npm i && cd .. && node scripts/build.js",
+    "compile-start": "npm run compile && npm run start",
+    "electron-build": "electron-packager ./build \"SmartMirror\" -p --platform=win32 --arch=x64 --overwrite --out=electron-dist/"
   },
   "eslintConfig": {
     "extends": "react-app"
   },
   "browserslist": {
     "production": [
-      "chrome 87"
+      ">1%"
     ],
     "development": [
       "last 1 chrome version",
@@ -101,58 +100,7 @@
   "devDependencies": {
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "electron-packager": "^15.2.0",
-    "foreman": "^3.0.1",
     "semistandard": "^16.0.0"
-  },
-  "jest": {
-    "roots": [
-      "<rootDir>/src"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx,ts,tsx}",
-      "!src/**/*.d.ts"
-    ],
-    "setupFiles": [
-      "react-app-polyfill/jsdom"
-    ],
-    "setupFilesAfterEnv": [],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
-      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
-    ],
-    "testEnvironment": "jsdom",
-    "testRunner": "D:\\Programming\\smart-mirror\\node_modules\\jest-circus\\runner.js",
-    "transform": {
-      "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
-      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
-    },
-    "transformIgnorePatterns": [
-      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|cjs|ts|tsx)$",
-      "^.+\\.module\\.(css|sass|scss)$"
-    ],
-    "modulePaths": [],
-    "moduleNameMapper": {
-      "^react-native$": "react-native-web",
-      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
-    },
-    "moduleFileExtensions": [
-      "web.js",
-      "js",
-      "web.ts",
-      "ts",
-      "web.tsx",
-      "tsx",
-      "json",
-      "web.jsx",
-      "jsx",
-      "node"
-    ],
-    "watchPlugins": [
-      "jest-watch-typeahead/filename",
-      "jest-watch-typeahead/testname"
-    ],
-    "resetMocks": true
   },
   "babel": {
     "presets": [
