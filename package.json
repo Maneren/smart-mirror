@@ -23,7 +23,6 @@
     "bootstrap": "^4.5.3",
     "camelcase": "^6.1.0",
     "case-sensitive-paths-webpack-plugin": "2.3.0",
-    "cors-anywhere": "^0.4.3",
     "css-loader": "4.3.0",
     "dotenv": "8.2.0",
     "dotenv-expand": "5.1.0",
@@ -83,7 +82,8 @@
     "build": "node scripts/build.js",
     "test": "node scripts/test.js",
     "electron": "electron build/electron-main.js",
-    "electron-dev": "node scripts/build.js && electron build/electron-main.js"
+    "electron-dev": "node scripts/build.js && cd public && npm i && cd ../build && electron electron-main.js",
+    "electron-build": "electron-packager ./build \"SmartMirror\" --platform=win32 --arch=x64 --out=dist/"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -100,7 +100,7 @@
   },
   "devDependencies": {
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
-    "electron-builder": "^22.9.1",
+    "electron-packager": "^15.2.0",
     "foreman": "^3.0.1",
     "semistandard": "^16.0.0"
   },

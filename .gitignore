@@ -10,6 +10,7 @@
 
 # production
 /build
+/dist
 
 # config
 config.json
@@ -30,3 +31,4 @@ yarn-error.log*
 
 
 src/gestureSensor/PAJ7620U2
+public/node_modules
