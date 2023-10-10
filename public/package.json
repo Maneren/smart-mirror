@@ -9,7 +9,7 @@
     "appId": "SmartMirror"
   },
   "dependencies": {
-    "cors-anywhere": "^0.4.3"
+    "cors-anywhere": "^0.4.4"
   },
   "devDependencies": {
     "electron": "11.0.2"
